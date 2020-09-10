@@ -1,0 +1,4 @@
+move west
+  Move West
+     move weSt
+move WEst

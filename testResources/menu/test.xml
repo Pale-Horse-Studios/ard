@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<menu title="Select an option" description="See the descriptions inside each option.">
+    <option1 title="Option 1" description="This is Option 1.">
+        <option11 title="Option 11" description="This is Option 11.">
+            <option111 title ="Option 111" description="This is Option 111.">
+            </option111>
+            <option112 title="Option 112" description="This is Option 112.">
+            </option112>
+        </option11>
+        <option12 title="Option 12" description="This is Option 12.">
+        </option12>
+        <option13 title="Option 13" description="This is Option 13.">
+        </option13>
+    </option1>
+    <option2 title="Option 2" description="This is Option 2.">
+        <option21 title="Option 21" description="This is Option 21.">
+        </option21>
+        <option22 title="Option 22" description="This is Option 22.">
+        </option22>
+        <option23 title="Option 23" description="This is Option 23.">
+        </option23>
+        <option24 title="Option 24" description="This is Option 24.">
+        </option24>
+    </option2>
+</menu>
