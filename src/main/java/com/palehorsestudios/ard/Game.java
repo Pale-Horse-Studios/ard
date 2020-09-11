@@ -72,7 +72,6 @@ public class Game {
             case "use":
                 UsePower(player, command[1]);
         }
-
         return true;
     }
 

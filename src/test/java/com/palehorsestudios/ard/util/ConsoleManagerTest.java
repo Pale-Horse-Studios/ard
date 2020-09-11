@@ -34,7 +34,7 @@ public class ConsoleManagerTest {
     @Test
     public void testRecursiveHelper() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse("testResources/menu/test.xml");
+        Document doc = builder.parse("src/test/resources/testResources/menu/test.xml");
         menuNodeList = doc.getElementsByTagName("menu");
         Node menuNode = menuNodeList.item(0);
 
