@@ -60,9 +60,15 @@ public class Puzzle {
     public int getDifficultyInt() {
         int result = 1;
         switch (difficulty) {
-            case "easy": result = 1;
-            case "medium": result = 2;
-            case "hard": result = 3;
+            case "easy":
+                result = 1;
+                break;
+            case "medium":
+                result = 2;
+                break;
+            case "hard":
+                result = 3;
+                break;
         }
         return result;
     }

@@ -19,19 +19,16 @@ public class Ironman extends Player {
     @Override
     public void attack() {
         int rand = ThreadLocalRandom.current().nextInt(2);
-        switch (rand) {
-            case 0:
-                fightRoomMonster(this);
-                if (getCurrentRoom().getMonsters().size() > 0) {
-                    MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this);
-                }
-                break;
-            case 1:
-                if (getCurrentRoom().getMonsters().size() > 0) {
-                    MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this);
-                }
-                fightRoomMonster(this);
-                break;
+        if(rand == 0) {
+            fightRoomMonster(this);
+            if (getCurrentRoom().getMonsters().size() > 0) {
+                MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this);
+            }
+        } else {
+            if (getCurrentRoom().getMonsters().size() > 0) {
+                MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this);
+            }
+            fightRoomMonster(this);
         }
     }
 
