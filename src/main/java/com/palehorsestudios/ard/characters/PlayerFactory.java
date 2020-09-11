@@ -19,7 +19,6 @@ public class PlayerFactory {
                 break;
             case "B":
                 player = new Ironman("Iron Man", 100, currentRoom, itemInventory, 1);
-                break;
         }
         return player;
     }

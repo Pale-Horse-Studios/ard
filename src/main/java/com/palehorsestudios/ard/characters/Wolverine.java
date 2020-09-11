@@ -31,7 +31,6 @@ public class Wolverine extends Player {
                     MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this);
                 }
                 fightRoomMonster(this);
-                break;
         }
     }
 

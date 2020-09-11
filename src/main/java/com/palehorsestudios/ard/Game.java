@@ -47,14 +47,30 @@ public class Game {
                 int size = gameMap.size();
                 gameMap.moveCharacter(player, Direction.valueOf(command[1]));
                 increaseScore(size);
-            case "look": Look(player, command[1]);
-            case "flight": Flight(player, command[1]);
-            case "fight": Fight(player, command[1]);
-            case "pickup": player.pickUpItem(Item.valueOf(command[1]));
-            case "drop": player.dropItem(Item.valueOf(command[1]));
-            case "help": ConsoleManager.gameExplanation();
-            case "unlock": unlockChest(player);
-            case "use": UsePower(player, command[1]);
+                break;
+            case "look":
+                Look(player, command[1]);
+                break;
+            case "flight":
+                Flight(player, command[1]);
+                break;
+            case "fight":
+                Fight(player, command[1]);
+                break;
+            case "pickup":
+                player.pickUpItem(Item.valueOf(command[1]));
+                break;
+            case "drop":
+                player.dropItem(Item.valueOf(command[1]));
+                break;
+            case "help":
+                ConsoleManager.gameExplanation();
+                break;
+            case "unlock":
+                unlockChest(player);
+                break;
+            case "use":
+                UsePower(player, command[1]);
         }
 
         return true;
@@ -120,9 +136,14 @@ public class Game {
      */
     private void Look(Player player, String option) {
         switch (option) {
-            case "Around": player.getCurrentRoom().overview();
-            case "Me": player.printStats();
-            default: itemRequestDesc(option);
+            case "Around":
+                player.getCurrentRoom().overview();
+                break;
+            case "Me":
+                player.printStats();
+                break;
+            default:
+                itemRequestDesc(option);
         }
     }
 
