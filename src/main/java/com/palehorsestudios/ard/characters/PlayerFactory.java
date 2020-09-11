@@ -13,11 +13,12 @@ public class PlayerFactory {
 
     public static Player createPlayer(Room currentRoom, List<Item> itemInventory, String playerOption) {
         Player player = null;
-        String normalizedPlayerOption = playerOption.toUpperCase().strip();
-        if(normalizedPlayerOption.equals("A")) {
-            player = new Wolverine("Wolverine", 100, currentRoom, itemInventory, 1);
-        } else if (normalizedPlayerOption.equals("B")) {
-            player = new Ironman("Iron Man", 100, currentRoom, itemInventory, 1);
+        switch (playerOption.toUpperCase().strip()) {
+            case "A":
+                player = new Wolverine("Wolverine", 100, currentRoom, itemInventory, 1);
+                break;
+            case "B":
+                player = new Ironman("Iron Man", 100, currentRoom, itemInventory, 1);
         }
         return player;
     }

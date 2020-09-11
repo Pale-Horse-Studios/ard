@@ -68,7 +68,6 @@ public class Puzzle {
                 break;
             case "hard":
                 result = 3;
-                break;
         }
         return result;
     }
