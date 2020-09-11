@@ -21,6 +21,17 @@ class App extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    // Send GET Request to /command/?userInput=
+    const { command } = this.state;
+    axios
+      .get(`/command/${command}`)
+      .then(({ data }) => {
+        // Update player & room
+        this.setState({ prompt: data.response });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     this.initialize();
   }
@@ -41,8 +52,6 @@ class App extends React.Component {
         console.log("Error fetching data from server: ", err);
       });
   }
-
-  // GET Request to /command/{userInput}
 
   render() {
     const msg = this.state.prompt;

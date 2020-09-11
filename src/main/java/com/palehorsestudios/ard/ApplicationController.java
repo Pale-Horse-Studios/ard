@@ -12,6 +12,12 @@ public class ApplicationController {
     return "index";
   }
 
+  @GetMapping(path = "/intro", produces = "application/json")
+  @ResponseBody
+  public Response getIntro() {
+    return new Response("TEST Intro");
+  }
+
   @GetMapping(path = "/command/{command}", produces = "application/json")
   @ResponseBody
   public Response doCommand(@PathVariable String command) {
