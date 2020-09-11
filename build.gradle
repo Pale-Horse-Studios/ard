@@ -7,17 +7,27 @@
  */
 
 plugins {
-    // Apply the java plugin to add support for Java
+    id 'org.springframework.boot' version '2.3.3.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
+}
 
-    // Apply the application plugin to add support for building a CLI application.
-    id 'application'
+group = 'com.palehorsestudios'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "Hoxton.SR8")
 }
 
 dependencies {
@@ -26,11 +36,19 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13'
-}
 
-application {
-    // Define the main class for the application.
-    mainClassName = 'com.palehorsestudios.ard.Main'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-aws-jdbc'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 jar {
@@ -42,4 +60,14 @@ jar {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+test {
+    useJUnitPlatform()
 }
