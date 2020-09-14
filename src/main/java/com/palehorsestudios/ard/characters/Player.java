@@ -55,6 +55,7 @@ public abstract class Player {
         if (itemsInventory.contains(item)) {
             itemsInventory.remove(item);
             currentRoom.addItem(item);
+            vsb.append(item + " dropped.");
         } else {
             vsb.append("Can't drop this item! It's not in player's item inventory!");
         }
