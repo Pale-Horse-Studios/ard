@@ -47,7 +47,7 @@ class App extends React.Component {
     // \u001b[ => build color chart
     // \n => split and display line by line
     const pattern = /[[]\d{1,2}[m]/gi;
-    res = res.replaceAll(pattern, "");
+    res = res.replace(pattern, "");
     let strArr = res.split("\n");
     return strArr;
   }
