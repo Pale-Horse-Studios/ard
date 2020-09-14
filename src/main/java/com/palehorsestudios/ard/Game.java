@@ -58,6 +58,18 @@ public class Game {
             case "look":
                 responseBuilder.response(Look(getPlayer(), command[1]));
                 break;
+            case "drop":
+                responseBuilder.response(getPlayer().dropItem(Item.valueOf(command[1])));
+                break;
+            case "help":
+                responseBuilder.response(ConsoleManager.gameExplanation());
+                break;
+            case "unlock":
+                responseBuilder.response(unlockChest(getPlayer()));
+                break;
+            case "use":
+                responseBuilder.response(UsePower(getPlayer(), command[1]));
+                break;
             case "flight":
                 responseBuilder.response(Flight(getPlayer(), command[1]));
                 break;
@@ -67,18 +79,7 @@ public class Game {
             case "pickup":
                 responseBuilder.response(getPlayer().pickUpItem(Item.valueOf(command[1])));
                 break;
-//      case "drop":
-//        game.getPlayer().dropItem(Item.valueOf(command[1]));
-//        break;
-//      case "help":
-//        ConsoleManager.gameExplanation();
-//        break;
-//      case "unlock":
-//        game.unlockChest(game.getPlayer());
-//        break;
-//      case "use":
-//        game.UsePower(game.getPlayer(), command[1]);
-            default:
+                default:
                 responseBuilder.response("Invalid command. Try again.");
         }
         if (boss == null) {
@@ -131,9 +132,11 @@ public class Game {
     /**
      * Method to instigate player using their special power.
      */
-    void UsePower(Player player, String option) {
-        System.out.println("use " + option);
-        player.useSpecialPower();
+    String UsePower(Player player, String option) {
+        StringBuilder vsb = new StringBuilder();
+        vsb.append("use " + option);
+        vsb.append("\n").append(player.useSpecialPower());
+        return vsb.toString();
     }
 
     /**
@@ -154,8 +157,10 @@ public class Game {
     /**
      * Method to invoke unlock chest method
      */
-    void unlockChest(Player player) {
-        player.getCurrentRoom().unlockChest();
+    String unlockChest(Player player) {
+        StringBuilder vsb = new StringBuilder();
+        vsb.append(player.getCurrentRoom().unlockChest());
+        return vsb.toString();
     }
 
     /**
@@ -203,4 +208,3 @@ public class Game {
         writer.close();
     }
 }
-

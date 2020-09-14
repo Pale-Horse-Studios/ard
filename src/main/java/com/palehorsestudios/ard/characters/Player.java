@@ -50,13 +50,16 @@ public abstract class Player {
      * and add the item into the room item list
      * if input is not in Item Enum, throw Exception
      */
-    public void dropItem(Item item) {
+    public String dropItem(Item item) {
+        StringBuilder vsb = new StringBuilder();
         if (itemsInventory.contains(item)) {
             itemsInventory.remove(item);
             currentRoom.addItem(item);
+            vsb.append(item + " dropped.");
         } else {
-            System.out.println("Can't drop this item! It's not in player's item inventory!");
+            vsb.append("Can't drop this item! It's not in player's item inventory!");
         }
+        return vsb.toString();
     }
 
     /**
@@ -67,7 +70,7 @@ public abstract class Player {
     /**
      * Abstract method to use player's special power.
      */
-    public abstract void useSpecialPower();
+    public abstract String useSpecialPower();
 
     public String getName() {
         return name;

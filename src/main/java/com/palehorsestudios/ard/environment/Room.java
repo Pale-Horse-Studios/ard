@@ -219,16 +219,18 @@ public class Room {
      * Runs the chest's question (if available) and get the reward from the chest. Adds rewarded items to the room's
      * inventory.
      */
-    public void unlockChest() {
+    public String unlockChest() {
+        StringBuilder vsb = new StringBuilder();
         if (chest != null) {
             List<Item> reward = chest.askQuestion();
             if (reward.size() > 0) {
-                System.out.println("The " + Codes.Chest.withColor("chest") + " empties its contents onto the floor.");
+                vsb.append("The ").append(Codes.Chest.withColor("chest")).append(" empties its contents onto the floor.");
             }
             this.addAllItems(reward);
         } else {
-            System.out.println("No " + Codes.Chest.withColor("chest") + " in this room.");
+            vsb.append("No ").append(Codes.Chest.withColor("chest")).append(" in this room.");
         }
+        return vsb.toString();
     }
 
     @Override
