@@ -37,15 +37,15 @@ public class Wolverine extends Player {
     }
 
     @Override //health boost
-    public void useSpecialPower() {
+    public String useSpecialPower() {
         if (this.getItemsInventory().contains(Item.valueOf("Power_stone"))) {
             int lifeValue = getLife();
             lifeValue += 50;
             setLife(lifeValue);
             this.getItemsInventory().remove(Item.valueOf("Power_stone"));
-            System.out.println(this.getName() + " has power stone in inventory and just used special power to self boost health by 50!");
+            return this.getName() + " has power stone in inventory and just used special power to self boost health by 50!";
         } else {
-            System.out.println("Can't use special power without power stone in inventory!");
+            return "Can't use special power without power stone in inventory!";
         }
     }
 

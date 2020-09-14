@@ -107,13 +107,13 @@ public class ConsoleManager {
      * Method to navigate the help menu. Prints out the current level title, description, and asks for input to go to
      * other levels for game information.
      */
-    public static void gameExplanation() {
-
+    public static String gameExplanation() {
+        StringBuilder vsb = new StringBuilder();
         boolean navigateMenu = true;
         MenuTrieNode curr = menu;
         while (navigateMenu) {
-            System.out.println("<" + curr.getTitle() + ">");
-            System.out.println(curr.getDescription());
+            vsb.append("<").append(curr.getTitle()).append(">");
+            vsb.append("\n").append(curr.getDescription());
             MenuTrieNode finalCurr = curr;
             int choice = getInput(IntStream.range(0, curr.getChildren().size())
                     .mapToObj(e -> List.of("" + e, finalCurr.getChild(e).getTitle()))
@@ -127,6 +127,7 @@ public class ConsoleManager {
                 curr = curr.getChild(choice);
             }
         }
+        return vsb.toString();
     }
 
     /**
