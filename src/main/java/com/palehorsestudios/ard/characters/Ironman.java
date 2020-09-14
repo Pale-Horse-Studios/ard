@@ -33,15 +33,16 @@ public class Ironman extends Player {
     }
 
     @Override //generate more items
-    public void useSpecialPower() {
+    public String useSpecialPower() {
         if (this.getItemsInventory().contains(Item.valueOf("Power_stone"))) {
             List<Item> inventory = getItemsInventory();
             int random = (int) (Math.random() * Item.values().length + 1);
             inventory.add(Item.values()[random]);
             inventory.remove(Item.valueOf("Power_stone"));
-            System.out.println(this.getName() + " has power stone in inventory and just used special power to generate one more item!");
+            return this.getName() + " has power stone in inventory and just used special power to generate one more item!";
         } else {
-            System.out.println("Can't use special power without power stone in inventory!");
+            return "Can't use special power without power stone in inventory!";
+
         }
     }
 }
