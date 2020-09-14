@@ -46,45 +46,52 @@ public class Game {
      *
      * @return
      */
-    private boolean play() {
-//        // let player know we expect something
-//        System.out.print("> ");
-//
-//        // ask what player wants to do
-//        // Text parser
-//        String[] command = TextParser.parser("");
-//        // do that thing
-//        switch (command[0]) {
-//            case "move":
-//                int size = gameMap.size();
-//                gameMap.moveCharacter(player, Direction.valueOf(command[1]));
-//                increaseScore(size);
-//                break;
-//            case "look":
-//                Look(player, command[1]);
-//                break;
-//            case "flight":
-//                Flight(player, command[1]);
-//                break;
-//            case "fight":
-//                Fight(player, command[1]);
-//                break;
-//            case "pickup":
-//                player.pickUpItem(Item.valueOf(command[1]));
-//                break;
-//            case "drop":
-//                player.dropItem(Item.valueOf(command[1]));
-//                break;
-//            case "help":
-//                ConsoleManager.gameExplanation();
-//                break;
-//            case "unlock":
-//                unlockChest(player);
-//                break;
-//            case "use":
-//                UsePower(player, command[1]);
-//        }
-        return true;
+    Response play(String cmd) {
+        String[] command = TextParser.parser(cmd);
+        Response.Builder responseBuilder = new Response.Builder();
+        switch (command[0]) {
+//      case "move":
+//        int size = game.getGameMap().size();
+//        game.getGameMap().moveCharacter(game.getPlayer(), Direction.valueOf(command[1]));
+//        game.increaseScore(size);
+//        break;
+            case "look":
+                responseBuilder.response(Look(getPlayer(), command[1]));
+                break;
+//      case "flight":
+//        game.Flight(game.getPlayer(), command[1]);
+//        break;
+//      case "fight":
+//        game.Fight(game.getPlayer(), command[1]);
+//        break;
+//      case "pickup":
+//        game.getPlayer().pickUpItem(Item.valueOf(command[1]));
+//        break;
+//      case "drop":
+//        game.getPlayer().dropItem(Item.valueOf(command[1]));
+//        break;
+//      case "help":
+//        ConsoleManager.gameExplanation();
+//        break;
+//      case "unlock":
+//        game.unlockChest(game.getPlayer());
+//        break;
+//      case "use":
+//        game.UsePower(game.getPlayer(), command[1]);
+            default:
+                responseBuilder.response("Invalid command. Try again.");
+        }
+        if (boss == null) {
+            boss = MonsterFactory.createBossMonster(player);
+            player.getCurrentRoom().addMonster(boss);
+        }
+        if (boss != null && boss.getLife() <= 0) {
+            responseBuilder.gameOverResult(Codes.Player.withColor(player.getName()) + " killed "
+                + Codes.Monster.withColor(boss.getName()) + "! You win!!!!");
+            keepScores(player);
+            responseBuilder.gameOver(true);
+        }
+        return responseBuilder.build();
     }
 
     /**
@@ -95,25 +102,8 @@ public class Game {
         ConsoleManager.gameIntro();
         player = ConsoleManager.choosePlayer(gameMap);
 
-        boolean playGame = true;
-        while (playGame) {
-            // keep playing game until it passes back as false
-            playGame = play();
-
-            if (boss == null) {
-                boss = MonsterFactory.createBossMonster(player);
-                player.getCurrentRoom().addMonster(boss);
-            }
-            if (boss != null && boss.getLife() <= 0) {
-                System.out.println(Codes.Player.withColor(player.getName()) + " killed "
-                        + Codes.Monster.withColor(boss.getName()) + "! You win!!!!");
-                keepScores(player);
-                exit("exit");
-            }
-        }
-
         // quit message
-        System.out.println("Thanks for playing! Come play again");
+//        System.out.println("Thanks for playing! Come play again");
 
     }
 
@@ -145,16 +135,14 @@ public class Game {
      * Method to look at different objects. Either "Around" to give details about the room. "Me" to give details about the
      * player.
      */
-    void Look(Player player, String option) {
+    String Look(Player player, String option) {
         switch (option) {
             case "Around":
-                player.getCurrentRoom().overview();
-                break;
+                return player.getCurrentRoom().overview();
             case "Me":
-                player.printStats();
-                break;
+                return player.printStats();
             default:
-                itemRequestDesc(option);
+                return itemRequestDesc(option);
         }
     }
 
@@ -175,17 +163,19 @@ public class Game {
         }
     }
 
-    public void itemRequestDesc(String item){
+    public String itemRequestDesc(String item){
+        StringBuilder sb = new StringBuilder();
         if(player.playerAndRoomItems().contains(Item.valueOf(item))){
             for (Item itemx : player.playerAndRoomItems()) {
                 if (itemx.name().equals(item)){
-                    System.out.println(itemx.getDescription());
+                    sb.append("\n").append(itemx.getDescription());
                     break;
                 }
             }
         }else {
-            System.out.println("Item not present");
+            sb.append("Item not present");
         }
+        return sb.toString();
     }
 
 
