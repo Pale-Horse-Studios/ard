@@ -58,9 +58,9 @@ public class Game {
             case "look":
                 responseBuilder.response(Look(getPlayer(), command[1]));
                 break;
-//      case "flight":
-//        game.Flight(game.getPlayer(), command[1]);
-//        break;
+            case "flight":
+                responseBuilder.response(Flight(getPlayer(), command[1]));
+                break;
 //      case "fight":
 //        game.Fight(game.getPlayer(), command[1]);
 //        break;
@@ -110,8 +110,8 @@ public class Game {
     /*
     Stubbed out method to prepare for flight action
      */
-    void Flight(Player player, String option) {
-        System.out.println("Flying " + option);
+    String Flight(Player player, String option) {
+        return "Flying " + option;
         // run method to do the action
     }
 
