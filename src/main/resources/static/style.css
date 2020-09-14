@@ -7,7 +7,7 @@ h1 {
   margin: 0;
   text-align: center;
   color: red;
-  font-size: 100px;
+  font-size: 10rem;
 }
 
 #app {
@@ -24,9 +24,18 @@ h1 {
   font-size: larger;
 }
 
+pre {
+  font-family: inherit;
+  margin: 0 30px;
+}
+
 .mainScreen p {
   width: 60rem;
-  overflow-wrap: normal;
+  text-align: justify;
+}
+
+.ascii-line {
+  margin: 0;
 }
 
 form {

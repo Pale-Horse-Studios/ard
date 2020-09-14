@@ -10,6 +10,7 @@ class App extends React.Component {
     this.state = {
       prompt: [],
       command: "",
+      ascii: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -30,7 +31,10 @@ class App extends React.Component {
         // Update player & room
         let { response } = data;
         let prompt = this.cleanUpResponse(response);
-        this.setState({ prompt });
+        this.setState({
+          ascii: false,
+          prompt,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -46,9 +50,11 @@ class App extends React.Component {
   cleanUpResponse(res) {
     // \u001b[ => build color chart
     // \n => split and display line by line
+    console.log(res);
     const pattern = /[[]\d{1,2}[m]/gi;
-    res = res.replaceAll(pattern, "");
+    res = res.replace(pattern, "");
     let strArr = res.split("\n");
+    console.log(strArr);
     return strArr;
   }
 
@@ -59,7 +65,7 @@ class App extends React.Component {
       .then(({ data }) => {
         let { response } = data;
         let prompt = this.cleanUpResponse(response);
-        this.setState({ prompt });
+        this.setState({ ascii: true, prompt });
       })
       .catch((err) => {
         console.log("Error fetching data from server: ", err);
@@ -68,14 +74,27 @@ class App extends React.Component {
 
   render() {
     const msg = this.state.prompt;
+    let { ascii } = this.state;
     return (
       <div>
-        <h1 className="title">ARD</h1>
+        <h1 className="title">A.R.D.</h1>
 
         <div className="mainScreen">
-          {msg.length > 0
-            ? msg.map((line, idx) => <Display key={idx} line={line} />)
-            : null}
+          <pre>
+            {msg.length > 0
+              ? msg.map((line, idx) => {
+                  return (
+                    <Display
+                      key={idx + line}
+                      idx={idx}
+                      line={line}
+                      length={msg.length}
+                      ascii={ascii}
+                    />
+                  );
+                })
+              : null}
+          </pre>
         </div>
         <form onSubmit={this.handleSubmit} className="userInput">
           <input
