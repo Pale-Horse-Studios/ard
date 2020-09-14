@@ -55,12 +55,13 @@ public class ConsoleManager {
      * Game title (banner)
      * Game description
      */
-    public static void gameIntro() {
-        System.out.println(getRandomColor().toColor(gameTitle()));
-        System.out.println("Welcome to " + Colors.CYAN.negative("ARD") + ", the game where you get "
+    public static String gameIntro() {
+        StringBuilder intro = new StringBuilder();
+        intro.append(getRandomColor().toColor(gameTitle()));
+        intro.append("Welcome to " + Colors.CYAN.negative("ARD") + ", the game where you get "
                 + Colors.CYAN.toColor("Another Random Destiny") + " every time you play!");
-        System.out.println("To learn about the game, type \"help me\".");
-        System.out.println();
+        intro.append("\nTo learn about the game, type \"help me\".");
+        return intro.toString();
     }
 
     /**
