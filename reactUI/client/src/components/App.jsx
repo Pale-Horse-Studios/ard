@@ -49,12 +49,9 @@ class App extends React.Component {
 
   cleanUpResponse(res) {
     // \u001b[ => build color chart
-    console.log(res);
     const pattern = /[[]\d{1,2}[m]/gi;
     res = res.replace(pattern, "");
-    let strArr = res.split("\n");
-    console.log(strArr);
-    return strArr;
+    return res.split("\n");
   }
 
   componentDidMount() {
