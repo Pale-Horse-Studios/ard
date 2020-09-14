@@ -35,14 +35,14 @@ public abstract class Player {
      * and remove the item from the room item list
      * if input is not in Item Enum, throw Exception
      */
-    public void pickUpItem(Item item) {
+    public String pickUpItem(Item item) {
         if (currentRoom.getItems().contains(item)) {
             itemsInventory.add(item);
             currentRoom.grabItem(item);
+            return "Picked up " + item + ".";
         } else {
-            System.out.println("Can't pick up! This item is not in the current room!");
+            return "Can't pick up! This item is not in the current room!";
         }
-
     }
 
     /**

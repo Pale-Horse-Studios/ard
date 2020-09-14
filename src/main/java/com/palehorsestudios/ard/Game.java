@@ -17,8 +17,6 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import static com.palehorsestudios.ard.util.ExitGame.exit;
-
 public class Game {
     private Player player;              // player reference
     private RoomMap gameMap;            // map of the rooms
@@ -51,11 +49,12 @@ public class Game {
         String[] command = TextParser.parser(cmd);
         Response.Builder responseBuilder = new Response.Builder();
         switch (command[0]) {
-//      case "move":
-//        int size = game.getGameMap().size();
-//        game.getGameMap().moveCharacter(game.getPlayer(), Direction.valueOf(command[1]));
-//        game.increaseScore(size);
-//        break;
+            case "move":
+                int size = getGameMap().size();
+                getGameMap().moveCharacter(getPlayer(), Direction.valueOf(command[1]));
+                responseBuilder.response("Moved " + Direction.valueOf(command[1]) + ".");
+                increaseScore(size);
+                break;
             case "look":
                 responseBuilder.response(Look(getPlayer(), command[1]));
                 break;
@@ -65,9 +64,9 @@ public class Game {
             case "fight":
                 responseBuilder.response(Fight(getPlayer(), command[1]));
                 break;
-//      case "pickup":
-//        game.getPlayer().pickUpItem(Item.valueOf(command[1]));
-//        break;
+            case "pickup":
+                responseBuilder.response(getPlayer().pickUpItem(Item.valueOf(command[1])));
+                break;
 //      case "drop":
 //        game.getPlayer().dropItem(Item.valueOf(command[1]));
 //        break;
