@@ -26,8 +26,7 @@ public class ApplicationController {
   @ResponseBody
   public Response getIntro() {
     Response.Builder responseBuilder = new Response.Builder();
-    System.out.println("returning intro");
-    return responseBuilder.response("test intro").build();
+    return responseBuilder.response(ConsoleManager.gameIntro()).build();
   }
 
   @GetMapping(path = "/command/{cmd}", produces = "application/json")
