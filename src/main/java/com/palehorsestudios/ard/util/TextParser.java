@@ -10,7 +10,7 @@ import java.util.Map;
  * and commands Classes locate in subpackage implementing Commands interface.
  */
 public class TextParser {
-    public static String[] parser() {
+    public static String[] parser(String str) {
         Map<String, Commands> commands = new HashMap<>();
         commands.put("pickup", new Pickup());
         commands.put("drop", new Drop());
@@ -21,7 +21,6 @@ public class TextParser {
         commands.put("help", new Help());
         commands.put("unlock", new Unlock());
         commands.put("use", new UseSpecialPower());
-        String str = ConsoleManager.scanner().nextLine();
         return ConsoleManager.scanInput(commands, str);
     }
 }

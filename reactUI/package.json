@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "react-dev": "webpack -d --watch",
+    "start": "webpack -d",
+    "react-dev": "../node_modules/.bin/webpack -d --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

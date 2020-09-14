@@ -32,3 +32,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+bundle.js
+
+node_modules

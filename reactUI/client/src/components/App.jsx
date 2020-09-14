@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import Display from "./Display";
+import Display from "./Display.jsx";
 
 class App extends React.Component {
   constructor(props) {
@@ -28,7 +28,9 @@ class App extends React.Component {
       .get(`/command/${command}`)
       .then(({ data }) => {
         // Update player & room
-        this.setState({ prompt: data.response });
+        let { response } = data;
+        let prompt = this.cleanUpResponse(response);
+        this.setState({ prompt });
       })
       .catch((err) => {
         console.log(err);
@@ -44,6 +46,8 @@ class App extends React.Component {
   cleanUpResponse(res) {
     // \u001b[ => build color chart
     // \n => split and display line by line
+    const pattern = /[[]\d{1,2}[m]/gi;
+    res = res.replaceAll(pattern, "");
     let strArr = res.split("\n");
     return strArr;
   }
@@ -70,9 +74,7 @@ class App extends React.Component {
 
         <div className="mainScreen">
           {msg.length > 0
-            ? msg.forEach((line, idx) => (
-                <Display key={idx} line={line}></Display>
-              ))
+            ? msg.map((line, idx) => <Display key={idx} line={line} />)
             : null}
         </div>
         <form onSubmit={this.handleSubmit} className="userInput">

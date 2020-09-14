@@ -21,7 +21,7 @@ public class TextParserTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         String[] expected = {"move", "North"};
-        String[] actual = parser();
+        String[] actual = parser(input);
         assertEquals(expected, actual);
     }
 

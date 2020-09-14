@@ -1,7 +1,5 @@
 import React from "react";
 
-const Display = ({ line }) => {
-  console.log(line);
-};
+const Display = ({ line }) => <p className="line">{line}</p>;
 
 export default Display;
