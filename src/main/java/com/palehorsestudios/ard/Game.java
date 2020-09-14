@@ -3,6 +3,7 @@ package com.palehorsestudios.ard;
 import com.palehorsestudios.ard.characters.Monster;
 import com.palehorsestudios.ard.characters.MonsterFactory;
 import com.palehorsestudios.ard.characters.Player;
+import com.palehorsestudios.ard.combat.combatEngine;
 import com.palehorsestudios.ard.environment.Direction;
 import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.environment.RoomMap;
@@ -15,8 +16,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Random;
-
-import static com.palehorsestudios.ard.util.ExitGame.exit;
 
 public class Game {
     private Player player;              // player reference
@@ -50,35 +49,37 @@ public class Game {
         String[] command = TextParser.parser(cmd);
         Response.Builder responseBuilder = new Response.Builder();
         switch (command[0]) {
-//      case "move":
-//        int size = game.getGameMap().size();
-//        game.getGameMap().moveCharacter(game.getPlayer(), Direction.valueOf(command[1]));
-//        game.increaseScore(size);
-//        break;
+            case "move":
+                int size = getGameMap().size();
+                getGameMap().moveCharacter(getPlayer(), Direction.valueOf(command[1]));
+                responseBuilder.response("Moved " + Direction.valueOf(command[1]) + ".");
+                increaseScore(size);
+                break;
             case "look":
                 responseBuilder.response(Look(getPlayer(), command[1]));
                 break;
-//      case "flight":
-//        game.Flight(game.getPlayer(), command[1]);
-//        break;
-//      case "fight":
-//        game.Fight(game.getPlayer(), command[1]);
-//        break;
-//      case "pickup":
-//        game.getPlayer().pickUpItem(Item.valueOf(command[1]));
-//        break;
-      case "drop":
-        responseBuilder.response(getPlayer().dropItem(Item.valueOf(command[1])));
-        break;
-      case "help":
-        responseBuilder.response(ConsoleManager.gameExplanation());
-        break;
-      case "unlock":
-        responseBuilder.response(unlockChest(getPlayer()));
-        break;
-      case "use":
-        responseBuilder.response(UsePower(getPlayer(), command[1]));
-            default:
+            case "drop":
+                responseBuilder.response(getPlayer().dropItem(Item.valueOf(command[1])));
+                break;
+            case "help":
+                responseBuilder.response(ConsoleManager.gameExplanation());
+                break;
+            case "unlock":
+                responseBuilder.response(unlockChest(getPlayer()));
+                break;
+            case "use":
+                responseBuilder.response(UsePower(getPlayer(), command[1]));
+                break;
+            case "flight":
+                responseBuilder.response(Flight(getPlayer(), command[1]));
+                break;
+            case "fight":
+                responseBuilder.response(Fight(getPlayer(), command[1]));
+                break;
+            case "pickup":
+                responseBuilder.response(getPlayer().pickUpItem(Item.valueOf(command[1])));
+                break;
+                default:
                 responseBuilder.response("Invalid command. Try again.");
         }
         if (boss == null) {
@@ -89,6 +90,9 @@ public class Game {
             responseBuilder.gameOverResult(Codes.Player.withColor(player.getName()) + " killed "
                 + Codes.Monster.withColor(boss.getName()) + "! You win!!!!");
             keepScores(player);
+            responseBuilder.gameOver(true);
+        }
+        if(combatEngine.checkIfPlayerAlive(player)) {
             responseBuilder.gameOver(true);
         }
         return responseBuilder.build();
@@ -110,17 +114,19 @@ public class Game {
     /*
     Stubbed out method to prepare for flight action
      */
-    void Flight(Player player, String option) {
-        System.out.println("Flying " + option);
+    String Flight(Player player, String option) {
+        return "Flying " + option;
         // run method to do the action
     }
 
     /**
      * Method to instigate player fighting. Calls player's attack method
      */
-    void Fight(Player player, String option) {
-        System.out.println("fighting " + option);
-        player.attack();
+    String Fight(Player player, String option) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("fighting ").append(option).append("\n");
+        sb.append(player.attack());
+        return sb.toString();
     }
 
     /**

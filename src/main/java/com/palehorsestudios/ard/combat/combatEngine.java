@@ -9,81 +9,93 @@ import com.palehorsestudios.ard.util.Codes;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.palehorsestudios.ard.combat.WinOrLose.LevelUp;
-import static com.palehorsestudios.ard.util.ExitGame.exit;
 
 public class combatEngine {
 
-    /**
-     * static method a player can call to attack monsters
-     *
-     * @param player current player
-     */
-    public static void fightRoomMonster(Player player) {
-        String[] fights = {
-                " fiercely hit ",
-                " successfully evaded and furiously punched ",
-                " heavily overthrew ",
-                " swiftly elbowed ",
-                " unexpected kicked ",
-        };
-        int rand = ThreadLocalRandom.current().nextInt(fights.length);
+  /**
+   * static method a player can call to attack monsters
+   *
+   * @param player current player
+   */
+  public static String fightRoomMonster(Player player) {
+    StringBuilder sb = new StringBuilder();
+    String[] fights = {
+      " fiercely hit ",
+      " successfully evaded and furiously punched ",
+      " heavily overthrew ",
+      " swiftly elbowed ",
+      " unexpected kicked ",
+    };
+    int rand = ThreadLocalRandom.current().nextInt(fights.length);
 
-        if (checkForMonsterInRoom(player.getCurrentRoom())) {
-            Monster monster = player.getCurrentRoom().getMonsters().get(0);
-            int lifeValue = monster.getLife();
-            int damage = randomDamage();
-            lifeValue -= damage;
-            monster.setLife(lifeValue);
-            if (!checkIfMonsterAlive(player.getCurrentRoom())) {
-                removeDefeatedMonsterFromRoom(player.getCurrentRoom());
-                LevelUp(player);
-                player.incrementScore();
-                System.out.println(Codes.Player.withColor(player.getName()) + " killed " + Codes.Monster.withColor(monster.getName()));
-            } else {
-                System.out.println(Codes.Player.withColor(player.getName()) + fights[rand]
-                        + Codes.Monster.withColor(monster.getName()) + " and "
-                        + Codes.Monster.withColor(monster.getName()) + " lost life value of: "
-                        + Codes.Monster.getColor().negative(damage));
-                System.out.println(Codes.Monster.withColor(monster.getName()) + " current life value is: "
-                        + Codes.Life.withColor(lifeValue));
-            }
-        }
+    if (checkForMonsterInRoom(player.getCurrentRoom())) {
+      Monster monster = player.getCurrentRoom().getMonsters().get(0);
+      int lifeValue = monster.getLife();
+      int damage = randomDamage();
+      lifeValue -= damage;
+      monster.setLife(lifeValue);
+      if (!checkIfMonsterAlive(player.getCurrentRoom())) {
+        removeDefeatedMonsterFromRoom(player.getCurrentRoom());
+        LevelUp(player);
+        player.incrementScore();
+        sb.append(Codes.Player.withColor(player.getName()))
+            .append(" killed ")
+            .append(Codes.Monster.withColor(monster.getName()));
+      } else {
+        sb.append(Codes.Player.withColor(player.getName()))
+            .append(fights[rand])
+            .append(Codes.Monster.withColor(monster.getName()))
+            .append(" and ")
+            .append(Codes.Monster.withColor(monster.getName()))
+            .append(" lost life value of: ")
+            .append(Codes.Monster.getColor().negative(damage));
+        sb.append(Codes.Monster.withColor(monster.getName()))
+            .append(" current life value is: ")
+            .append(Codes.Life.withColor(lifeValue));
+      }
     }
+    return sb.toString();
+  }
 
-    /**
-     * static method that runs for the monster to fight back when a player attacks
-     *
-     * @param monster the monster in the current room.
-     * @param player  the player currently in the room with the monster.
-     */
-    public static void MonsterFightsPlayer(Monster monster, Player player) {
-        String[] attacks = {
-                " violently bit ",
-                " quietly stalked and suddenly attacked ",
-                " smartly dodged and viciously clawed ",
-                " aggressively knocked down ",
-                " ruthlessly hit "
-        };
-        int rand = ThreadLocalRandom.current().nextInt(attacks.length);
+  /**
+   * static method that runs for the monster to fight back when a player attacks
+   *
+   * @param monster the monster in the current room.
+   * @param player the player currently in the room with the monster.
+   */
+  public static String MonsterFightsPlayer(Monster monster, Player player) {
+    StringBuilder sb = new StringBuilder();
+    String[] attacks = {
+      " violently bit ",
+      " quietly stalked and suddenly attacked ",
+      " smartly dodged and viciously clawed ",
+      " aggressively knocked down ",
+      " ruthlessly hit "
+    };
+    int rand = ThreadLocalRandom.current().nextInt(attacks.length);
 
-        if (checkIfMonsterAlive(player.getCurrentRoom())) {
-            int lifeValue = player.getLife();
-            int damage = randomDamage();
-            lifeValue -= damage;
-            player.setLife(lifeValue);
-            if (!checkIfPlayerAlive(player)) {
-                ifPlayerDeath(monster, player);
-            } else {
-                System.out.println(Codes.Monster.withColor(monster.getName()) + attacks[rand]
-                        + Codes.Player.withColor(player.getName()) + " and "
-                        + Codes.Player.withColor(player.getName()) + " lost life value of: "
-                        + Codes.Player.getColor().negative(damage));
-                System.out.println(Codes.Player.withColor(player.getName()) + " current life value is: "
-                        + Codes.Life.withColor(lifeValue));
-            }
-        }
-
+    if (checkIfMonsterAlive(player.getCurrentRoom())) {
+      int lifeValue = player.getLife();
+      int damage = randomDamage();
+      lifeValue -= damage;
+      player.setLife(lifeValue);
+      if (!checkIfPlayerAlive(player)) {
+        sb.append(ifPlayerDeath(monster, player));
+      } else {
+        sb.append(Codes.Monster.withColor(monster.getName()))
+            .append(attacks[rand])
+            .append(Codes.Player.withColor(player.getName()))
+            .append(" and ")
+            .append(Codes.Player.withColor(player.getName()))
+            .append(" lost life value of: ")
+            .append(Codes.Player.getColor().negative(damage));
+        sb.append(Codes.Player.withColor(player.getName()))
+            .append(" current life value is: ")
+            .append(Codes.Life.withColor(lifeValue));
+      }
     }
+    return sb.toString();
+  }
 
     /**
      * Helper method for fightRoomMonster to check if a monster is in the room
@@ -131,7 +143,7 @@ public class combatEngine {
      * @param player current game player
      * @return true or false based on player's life value
      */
-    static boolean checkIfPlayerAlive(Player player) {
+    public static boolean checkIfPlayerAlive(Player player) {
         boolean alive = false;
         if (player.getLife() > 0) {
             alive = true;
@@ -144,11 +156,10 @@ public class combatEngine {
      *
      * @param monster current room's monster
      */
-    private static void ifPlayerDeath(Monster monster, Player player) {
-        System.out.println("Sorry " + Codes.Monster.withColor(monster.getName()) + " killed "
-                + Codes.Player.withColor("you."));
+    private static String ifPlayerDeath(Monster monster, Player player) {
         Game.keepScores(player);
-        exit("exit");
+        return "Sorry " + Codes.Monster.withColor(monster.getName()) + " killed "
+                + Codes.Player.withColor("you.");
     }
 
     /**

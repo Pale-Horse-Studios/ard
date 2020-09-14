@@ -17,21 +17,23 @@ public class Wolverine extends Player {
     }
 
     @Override
-    public void attack() {
+    public String attack() {
+        StringBuilder sb = new StringBuilder();
         int rand = ThreadLocalRandom.current().nextInt(2);
         switch (rand) {
             case 0:
-                fightRoomMonster(this);
+                sb.append(fightRoomMonster(this));
                 if (getCurrentRoom().getMonsters().size() > 0) {
-                    MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this);
+                    sb.append("\n").append(MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this));
                 }
                 break;
             case 1:
                 if (getCurrentRoom().getMonsters().size() > 0) {
-                    MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this);
+                    sb.append(MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this));
                 }
-                fightRoomMonster(this);
+                sb.append("\n").append(fightRoomMonster(this));
         }
+        return sb.toString();
     }
 
     @Override //health boost

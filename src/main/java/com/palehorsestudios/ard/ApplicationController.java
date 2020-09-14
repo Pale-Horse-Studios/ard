@@ -1,9 +1,6 @@
 package com.palehorsestudios.ard;
 
-import com.palehorsestudios.ard.environment.Direction;
-import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.util.ConsoleManager;
-import com.palehorsestudios.ard.util.TextParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +22,7 @@ public class ApplicationController {
   @ResponseBody
   public Response getIntro() {
     Response.Builder responseBuilder = new Response.Builder();
-    return responseBuilder.response("test intro").build();
+    return responseBuilder.response(ConsoleManager.gameIntro()).build();
   }
 
   @GetMapping(path = "/command/{cmd}", produces = "application/json")
