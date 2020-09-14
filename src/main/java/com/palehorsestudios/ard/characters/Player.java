@@ -101,14 +101,16 @@ public abstract class Player {
         this.itemsInventory = itemsInventory;
     }
 
-    public void printStats() {
-        System.out.println(Codes.Player.getCode() + Codes.Player.withColor(getName()));
-        System.out.println(Codes.Life.getCode() + Codes.Life.withColor(getLife()));
-        System.out.println(Codes.Room.getCode() + Codes.Room.withColor("Room " + getCurrentRoom().getId()));
-        System.out.println(Codes.Item.getCode() + getItemsInventory().stream()
-                .map(e -> Codes.Item.withColor(e.toString())).collect(Collectors.joining(", ")));
-        System.out.println(Codes.Score.getCode() + Codes.Score.withColor(" Score " + getScore()));
-        System.out.println(Codes.Level.getCode() + Codes.Level.withColor(" Level " + getLevel()));
+    public String printStats() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Codes.Player.getCode()).append(Codes.Player.withColor(getName()));
+        sb.append("\n").append(Codes.Life.getCode()).append(Codes.Life.withColor(getLife()));
+        sb.append("\n").append(Codes.Room.getCode()).append(Codes.Room.withColor("Room " + getCurrentRoom().getId()));
+        sb.append("\n").append(Codes.Item.getCode()).append(getItemsInventory().stream()
+            .map(e -> Codes.Item.withColor(e.toString())).collect(Collectors.joining(", ")));
+        sb.append("\n").append(Codes.Score.getCode()).append(Codes.Score.withColor(" Score " + getScore()));
+        sb.append("\n").append(Codes.Level.getCode()).append(Codes.Level.withColor(" Level " + getLevel()));
+        return sb.toString();
     }
 
     public int getLevel() {

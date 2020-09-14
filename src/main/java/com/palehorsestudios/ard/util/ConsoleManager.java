@@ -135,31 +135,32 @@ public class ConsoleManager {
      * @return newly created player
      */
     public static Player choosePlayer(RoomMap map) {
-        String[] instructions = {
-                "Please just type in the letter 'A' or 'B' to choose the type of "
-                        + Codes.Player.withColor("player") + " you want to play with.",
-                "A: [" + Codes.Player.withColor("Wolverine") + "] has special ability of health boost;\n" +
-                        "B: [" + Codes.Player.withColor("Iron Man") + "] has special ability to randomly " +
-                        "generate one item that's already in inventory.",
-                "Wrong input!\n" + "Enter A or B: ",
-        };
+//        String[] instructions = {
+//                "Please just type in the letter 'A' or 'B' to choose the type of "
+//                        + Codes.Player.withColor("player") + " you want to play with.",
+//                "A: [" + Codes.Player.withColor("Wolverine") + "] has special ability of health boost;\n" +
+//                        "B: [" + Codes.Player.withColor("Iron Man") + "] has special ability to randomly " +
+//                        "generate one item that's already in inventory.",
+//                "Wrong input!\n" + "Enter A or B: ",
+//        };
+//
+//        System.out.println(instructions[0]);
+//        System.out.println(instructions[1]);
+//        String playerChoice = scanner.nextLine();
+//        exit(playerChoice);
+//        while (!playerChoice.toUpperCase().strip().equals(Character.toString('A')) &&
+//                !playerChoice.toUpperCase().strip().equals(Character.toString('B'))) {
+//            System.out.println(instructions[2]);
+//            System.out.println(instructions[0]);
+//            System.out.println(instructions[1]);
+//            playerChoice = scanner.nextLine();
+//            exit(playerChoice);
+//        }
+//        String playName = (playerChoice.toUpperCase().strip().equals(Character.toString('A'))) ? "Wolverine" : "Iron Man";
+//        System.out.println("Player type: [" + Codes.Player.withColor(playName) + "] has been chosen.");
 
-        System.out.println(instructions[0]);
-        System.out.println(instructions[1]);
-        String playerChoice = scanner.nextLine();
-        exit(playerChoice);
-        while (!playerChoice.toUpperCase().strip().equals(Character.toString('A')) &&
-                !playerChoice.toUpperCase().strip().equals(Character.toString('B'))) {
-            System.out.println(instructions[2]);
-            System.out.println(instructions[0]);
-            System.out.println(instructions[1]);
-            playerChoice = scanner.nextLine();
-            exit(playerChoice);
-        }
-        String playName = (playerChoice.toUpperCase().strip().equals(Character.toString('A'))) ? "Wolverine" : "Iron Man";
-        System.out.println("Player type: [" + Codes.Player.withColor(playName) + "] has been chosen.");
-
-        return PlayerFactory.createPlayer(map.getStart(), new ArrayList<>(), playerChoice);
+//        return PlayerFactory.createPlayer(map.getStart(), new ArrayList<>(), playerChoice);
+        return PlayerFactory.createPlayer(map.getStart(), new ArrayList<>(), "A");
     }
 
     /**

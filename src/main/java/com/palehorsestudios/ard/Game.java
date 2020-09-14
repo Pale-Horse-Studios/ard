@@ -29,50 +29,69 @@ public class Game {
         gameMap = new RoomMap();
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public RoomMap getGameMap() {
+        return gameMap;
+    }
+
+    public Monster getBoss() {
+        return boss;
+    }
+
     /**
      * Method to run the basic logic behind the game. Parse text, do command, return boolean if game is still going.
      *
      * @return
      */
-    private boolean play() {
-        // let player know we expect something
-        System.out.print("> ");
-
-        // ask what player wants to do
-        // Text parser
-        String[] command = TextParser.parser();
-        // do that thing
+    Response play(String cmd) {
+        String[] command = TextParser.parser(cmd);
+        Response.Builder responseBuilder = new Response.Builder();
         switch (command[0]) {
-            case "move":
-                int size = gameMap.size();
-                gameMap.moveCharacter(player, Direction.valueOf(command[1]));
-                increaseScore(size);
-                break;
+//      case "move":
+//        int size = game.getGameMap().size();
+//        game.getGameMap().moveCharacter(game.getPlayer(), Direction.valueOf(command[1]));
+//        game.increaseScore(size);
+//        break;
             case "look":
-                Look(player, command[1]);
+                responseBuilder.response(Look(getPlayer(), command[1]));
                 break;
-            case "flight":
-                Flight(player, command[1]);
-                break;
-            case "fight":
-                Fight(player, command[1]);
-                break;
-            case "pickup":
-                player.pickUpItem(Item.valueOf(command[1]));
-                break;
-            case "drop":
-                player.dropItem(Item.valueOf(command[1]));
-                break;
-            case "help":
-                ConsoleManager.gameExplanation();
-                break;
-            case "unlock":
-                unlockChest(player);
-                break;
-            case "use":
-                UsePower(player, command[1]);
+//      case "flight":
+//        game.Flight(game.getPlayer(), command[1]);
+//        break;
+//      case "fight":
+//        game.Fight(game.getPlayer(), command[1]);
+//        break;
+//      case "pickup":
+//        game.getPlayer().pickUpItem(Item.valueOf(command[1]));
+//        break;
+//      case "drop":
+//        game.getPlayer().dropItem(Item.valueOf(command[1]));
+//        break;
+//      case "help":
+//        ConsoleManager.gameExplanation();
+//        break;
+//      case "unlock":
+//        game.unlockChest(game.getPlayer());
+//        break;
+//      case "use":
+//        game.UsePower(game.getPlayer(), command[1]);
+            default:
+                responseBuilder.response("Invalid command. Try again.");
         }
-        return true;
+        if (boss == null) {
+            boss = MonsterFactory.createBossMonster(player);
+            player.getCurrentRoom().addMonster(boss);
+        }
+        if (boss != null && boss.getLife() <= 0) {
+            responseBuilder.gameOverResult(Codes.Player.withColor(player.getName()) + " killed "
+                + Codes.Monster.withColor(boss.getName()) + "! You win!!!!");
+            keepScores(player);
+            responseBuilder.gameOver(true);
+        }
+        return responseBuilder.build();
     }
 
     /**
@@ -83,32 +102,15 @@ public class Game {
         ConsoleManager.gameIntro();
         player = ConsoleManager.choosePlayer(gameMap);
 
-        boolean playGame = true;
-        while (playGame) {
-            // keep playing game until it passes back as false
-            playGame = play();
-
-            if (boss == null) {
-                boss = MonsterFactory.createBossMonster(player);
-                player.getCurrentRoom().addMonster(boss);
-            }
-            if (boss != null && boss.getLife() <= 0) {
-                System.out.println(Codes.Player.withColor(player.getName()) + " killed "
-                        + Codes.Monster.withColor(boss.getName()) + "! You win!!!!");
-                keepScores(player);
-                exit("exit");
-            }
-        }
-
         // quit message
-        System.out.println("Thanks for playing! Come play again");
+//        System.out.println("Thanks for playing! Come play again");
 
     }
 
     /*
     Stubbed out method to prepare for flight action
      */
-    private void Flight(Player player, String option) {
+    void Flight(Player player, String option) {
         System.out.println("Flying " + option);
         // run method to do the action
     }
@@ -116,7 +118,7 @@ public class Game {
     /**
      * Method to instigate player fighting. Calls player's attack method
      */
-    private void Fight(Player player, String option) {
+    void Fight(Player player, String option) {
         System.out.println("fighting " + option);
         player.attack();
     }
@@ -124,7 +126,7 @@ public class Game {
     /**
      * Method to instigate player using their special power.
      */
-    private void UsePower(Player player, String option) {
+    void UsePower(Player player, String option) {
         System.out.println("use " + option);
         player.useSpecialPower();
     }
@@ -133,47 +135,47 @@ public class Game {
      * Method to look at different objects. Either "Around" to give details about the room. "Me" to give details about the
      * player.
      */
-    private void Look(Player player, String option) {
+    String Look(Player player, String option) {
         switch (option) {
             case "Around":
-                player.getCurrentRoom().overview();
-                break;
+                return player.getCurrentRoom().overview();
             case "Me":
-                player.printStats();
-                break;
+                return player.printStats();
             default:
-                itemRequestDesc(option);
+                return itemRequestDesc(option);
         }
     }
 
     /**
      * Method to invoke unlock chest method
      */
-    private void unlockChest(Player player) {
+    void unlockChest(Player player) {
         player.getCurrentRoom().unlockChest();
     }
 
     /**
      * Method to call increment score for the player when the gamemap has increased in size.
      */
-    private void increaseScore(int previousSize) {
+    void increaseScore(int previousSize) {
         int newSize = gameMap.size();
         if (newSize > previousSize) {
             player.incrementScore();
         }
     }
 
-    public void itemRequestDesc(String item){
+    public String itemRequestDesc(String item){
+        StringBuilder sb = new StringBuilder();
         if(player.playerAndRoomItems().contains(Item.valueOf(item))){
             for (Item itemx : player.playerAndRoomItems()) {
                 if (itemx.name().equals(item)){
-                    System.out.println(itemx.getDescription());
+                    sb.append("\n").append(itemx.getDescription());
                     break;
                 }
             }
         }else {
-            System.out.println("Item not present");
+            sb.append("Item not present");
         }
+        return sb.toString();
     }
 
 

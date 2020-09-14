@@ -167,15 +167,17 @@ public class Room {
     /**
      * Brief overview of what is in a room
      */
-    public void overview() {
-        System.out.println(Codes.Room.getCode() + "You are in " + Codes.Room.withColor("Room " + getId()));
+    public String overview() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Codes.Room.getCode()).append("You are in ").append(Codes.Room.withColor("Room " + getId()));
         String temp = Codes.Left.getCode() + Codes.Left.withColor(" " + getDescription() + " ") + Codes.Right.getCode();
-        System.out.println(Codes.Left.getCode() + Codes.Left.withColor(" " + getDescription() + " ") + Codes.Right.getCode());
-        System.out.println(Codes.Item.getCode() + itemsPresent());
+        sb.append("\n").append(Codes.Left.getCode()).append(Codes.Left.withColor(" " + getDescription() + " ")).append(Codes.Right.getCode());
+        sb.append("\n").append(Codes.Item.getCode()).append(itemsPresent());
         if (chest != null) {
-            System.out.println(Codes.Chest.getCode() + Codes.Chest.withColor(" " + chest.toString()));
+            sb.append("\n").append(Codes.Chest.getCode()).append(Codes.Chest.withColor(" " + chest.toString()));
         }
-        System.out.println(Codes.Monster.getCode() + monstersPresent());
+        sb.append("\n").append(Codes.Monster.getCode()).append(monstersPresent());
+        return sb.toString();
     }
 
     /**
