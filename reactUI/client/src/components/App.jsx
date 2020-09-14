@@ -23,7 +23,7 @@ class App extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // Send GET Request to /command/?userInput=
+    // Send GET Request to /command/?command
     const { command } = this.state;
     axios
       .get(`/command/${command}`)
@@ -49,7 +49,6 @@ class App extends React.Component {
 
   cleanUpResponse(res) {
     // \u001b[ => build color chart
-    // \n => split and display line by line
     console.log(res);
     const pattern = /[[]\d{1,2}[m]/gi;
     res = res.replace(pattern, "");
