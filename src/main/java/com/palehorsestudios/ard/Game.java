@@ -29,49 +29,61 @@ public class Game {
         gameMap = new RoomMap();
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public RoomMap getGameMap() {
+        return gameMap;
+    }
+
+    public Monster getBoss() {
+        return boss;
+    }
+
     /**
      * Method to run the basic logic behind the game. Parse text, do command, return boolean if game is still going.
      *
      * @return
      */
     private boolean play() {
-        // let player know we expect something
-        System.out.print("> ");
-
-        // ask what player wants to do
-        // Text parser
-        String[] command = TextParser.parser();
-        // do that thing
-        switch (command[0]) {
-            case "move":
-                int size = gameMap.size();
-                gameMap.moveCharacter(player, Direction.valueOf(command[1]));
-                increaseScore(size);
-                break;
-            case "look":
-                Look(player, command[1]);
-                break;
-            case "flight":
-                Flight(player, command[1]);
-                break;
-            case "fight":
-                Fight(player, command[1]);
-                break;
-            case "pickup":
-                player.pickUpItem(Item.valueOf(command[1]));
-                break;
-            case "drop":
-                player.dropItem(Item.valueOf(command[1]));
-                break;
-            case "help":
-                ConsoleManager.gameExplanation();
-                break;
-            case "unlock":
-                unlockChest(player);
-                break;
-            case "use":
-                UsePower(player, command[1]);
-        }
+//        // let player know we expect something
+//        System.out.print("> ");
+//
+//        // ask what player wants to do
+//        // Text parser
+//        String[] command = TextParser.parser("");
+//        // do that thing
+//        switch (command[0]) {
+//            case "move":
+//                int size = gameMap.size();
+//                gameMap.moveCharacter(player, Direction.valueOf(command[1]));
+//                increaseScore(size);
+//                break;
+//            case "look":
+//                Look(player, command[1]);
+//                break;
+//            case "flight":
+//                Flight(player, command[1]);
+//                break;
+//            case "fight":
+//                Fight(player, command[1]);
+//                break;
+//            case "pickup":
+//                player.pickUpItem(Item.valueOf(command[1]));
+//                break;
+//            case "drop":
+//                player.dropItem(Item.valueOf(command[1]));
+//                break;
+//            case "help":
+//                ConsoleManager.gameExplanation();
+//                break;
+//            case "unlock":
+//                unlockChest(player);
+//                break;
+//            case "use":
+//                UsePower(player, command[1]);
+//        }
         return true;
     }
 
@@ -108,7 +120,7 @@ public class Game {
     /*
     Stubbed out method to prepare for flight action
      */
-    private void Flight(Player player, String option) {
+    void Flight(Player player, String option) {
         System.out.println("Flying " + option);
         // run method to do the action
     }
@@ -116,7 +128,7 @@ public class Game {
     /**
      * Method to instigate player fighting. Calls player's attack method
      */
-    private void Fight(Player player, String option) {
+    void Fight(Player player, String option) {
         System.out.println("fighting " + option);
         player.attack();
     }
@@ -124,7 +136,7 @@ public class Game {
     /**
      * Method to instigate player using their special power.
      */
-    private void UsePower(Player player, String option) {
+    void UsePower(Player player, String option) {
         System.out.println("use " + option);
         player.useSpecialPower();
     }
@@ -133,7 +145,7 @@ public class Game {
      * Method to look at different objects. Either "Around" to give details about the room. "Me" to give details about the
      * player.
      */
-    private void Look(Player player, String option) {
+    void Look(Player player, String option) {
         switch (option) {
             case "Around":
                 player.getCurrentRoom().overview();
@@ -149,14 +161,14 @@ public class Game {
     /**
      * Method to invoke unlock chest method
      */
-    private void unlockChest(Player player) {
+    void unlockChest(Player player) {
         player.getCurrentRoom().unlockChest();
     }
 
     /**
      * Method to call increment score for the player when the gamemap has increased in size.
      */
-    private void increaseScore(int previousSize) {
+    void increaseScore(int previousSize) {
         int newSize = gameMap.size();
         if (newSize > previousSize) {
             player.incrementScore();

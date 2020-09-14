@@ -11,47 +11,50 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ApplicationController {
+  Game game;
+
   @GetMapping("/")
   public String getHome() {
+    game = new Game();
+    game.newGame();
+    
     return "index";
   }
 
-  @GetMapping(path = "/command/{command}", produces = "application/json")
+  @GetMapping(path = "/command/{cmd}", produces = "application/json")
   @ResponseBody
-  public Response doCommand(@PathVariable String command) {
-    // Text parser
-    String[] command = TextParser.parser();
-    // do that thing
+  public Response doCommand(@PathVariable String cmd) {
+    String[] command = TextParser.parser(cmd);
     switch (command[0]) {
       case "move":
-        int size = gameMap.size();
-        gameMap.moveCharacter(player, Direction.valueOf(command[1]));
-        increaseScore(size);
+        int size = game.getGameMap().size();
+        game.getGameMap().moveCharacter(game.getPlayer(), Direction.valueOf(command[1]));
+        game.increaseScore(size);
         break;
       case "look":
-        Look(player, command[1]);
+        game.Look(game.getPlayer(), command[1]);
         break;
       case "flight":
-        Flight(player, command[1]);
+        game.Flight(game.getPlayer(), command[1]);
         break;
       case "fight":
-        Fight(player, command[1]);
+        game.Fight(game.getPlayer(), command[1]);
         break;
       case "pickup":
-        player.pickUpItem(Item.valueOf(command[1]));
+        game.getPlayer().pickUpItem(Item.valueOf(command[1]));
         break;
       case "drop":
-        player.dropItem(Item.valueOf(command[1]));
+        game.getPlayer().dropItem(Item.valueOf(command[1]));
         break;
       case "help":
         ConsoleManager.gameExplanation();
         break;
       case "unlock":
-        unlockChest(player);
+        game.unlockChest(game.getPlayer());
         break;
       case "use":
-        UsePower(player, command[1]);
+        game.UsePower(game.getPlayer(), command[1]);
     }
-    return new Response(command);
+    return new Response(cmd);
   }
 }
