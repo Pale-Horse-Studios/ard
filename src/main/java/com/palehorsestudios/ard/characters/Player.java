@@ -51,13 +51,14 @@ public abstract class Player {
      * if input is not in Item Enum, throw Exception
      */
     public String dropItem(Item item) {
+        StringBuilder vsb = new StringBuilder();
         if (itemsInventory.contains(item)) {
             itemsInventory.remove(item);
             currentRoom.addItem(item);
         } else {
-            return "Can't drop this item! It's not in player's item inventory!";
+            vsb.append("Can't drop this item! It's not in player's item inventory!");
         }
-        return toString();
+        return vsb.toString();
     }
 
     /**

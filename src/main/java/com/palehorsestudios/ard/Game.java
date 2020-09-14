@@ -135,7 +135,7 @@ public class Game {
     String UsePower(Player player, String option) {
         StringBuilder vsb = new StringBuilder();
         vsb.append("use " + option);
-        player.useSpecialPower();
+        vsb.append("\n").append(player.useSpecialPower());
         return vsb.toString();
     }
 
@@ -158,8 +158,9 @@ public class Game {
      * Method to invoke unlock chest method
      */
     String unlockChest(Player player) {
-        player.getCurrentRoom().unlockChest();
-        return null;
+        StringBuilder vsb = new StringBuilder();
+        vsb.append(player.getCurrentRoom().unlockChest());
+        return vsb.toString();
     }
 
     /**

@@ -113,7 +113,7 @@ public class ConsoleManager {
         MenuTrieNode curr = menu;
         while (navigateMenu) {
             vsb.append("<").append(curr.getTitle()).append(">");
-            vsb.append(curr.getDescription());
+            vsb.append("\n").append(curr.getDescription());
             MenuTrieNode finalCurr = curr;
             int choice = getInput(IntStream.range(0, curr.getChildren().size())
                     .mapToObj(e -> List.of("" + e, finalCurr.getChild(e).getTitle()))
