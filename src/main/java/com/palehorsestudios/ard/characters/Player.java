@@ -62,7 +62,7 @@ public abstract class Player {
     /**
      * Abstract method to attack a monster
      */
-    public abstract void attack();
+    public abstract String attack();
 
     /**
      * Abstract method to use player's special power.

@@ -3,6 +3,7 @@ package com.palehorsestudios.ard;
 import com.palehorsestudios.ard.characters.Monster;
 import com.palehorsestudios.ard.characters.MonsterFactory;
 import com.palehorsestudios.ard.characters.Player;
+import com.palehorsestudios.ard.combat.combatEngine;
 import com.palehorsestudios.ard.environment.Direction;
 import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.environment.RoomMap;
@@ -61,9 +62,9 @@ public class Game {
             case "flight":
                 responseBuilder.response(Flight(getPlayer(), command[1]));
                 break;
-//      case "fight":
-//        game.Fight(game.getPlayer(), command[1]);
-//        break;
+            case "fight":
+                responseBuilder.response(Fight(getPlayer(), command[1]));
+                break;
 //      case "pickup":
 //        game.getPlayer().pickUpItem(Item.valueOf(command[1]));
 //        break;
@@ -89,6 +90,9 @@ public class Game {
             responseBuilder.gameOverResult(Codes.Player.withColor(player.getName()) + " killed "
                 + Codes.Monster.withColor(boss.getName()) + "! You win!!!!");
             keepScores(player);
+            responseBuilder.gameOver(true);
+        }
+        if(combatEngine.checkIfPlayerAlive(player)) {
             responseBuilder.gameOver(true);
         }
         return responseBuilder.build();
@@ -118,9 +122,11 @@ public class Game {
     /**
      * Method to instigate player fighting. Calls player's attack method
      */
-    void Fight(Player player, String option) {
-        System.out.println("fighting " + option);
-        player.attack();
+    String Fight(Player player, String option) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("fighting ").append(option).append("\n");
+        sb.append(player.attack());
+        return sb.toString();
     }
 
     /**

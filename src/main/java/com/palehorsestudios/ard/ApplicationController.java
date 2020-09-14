@@ -18,6 +18,7 @@ public class ApplicationController {
   public String getHome() {
     game = new Game();
     game.newGame();
+    System.out.println("returning index");
     return "index";
   }
 
@@ -25,12 +26,14 @@ public class ApplicationController {
   @ResponseBody
   public Response getIntro() {
     Response.Builder responseBuilder = new Response.Builder();
+    System.out.println("returning intro");
     return responseBuilder.response("test intro").build();
   }
 
   @GetMapping(path = "/command/{cmd}", produces = "application/json")
   @ResponseBody
   public Response doCommand(@PathVariable String cmd) {
+    System.out.println("in doCommand");
     return game.play(cmd);
   }
 }
