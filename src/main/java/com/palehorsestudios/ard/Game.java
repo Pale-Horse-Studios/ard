@@ -70,6 +70,7 @@ public class Game {
                 break;
             case "unlock":
                 responseBuilder.response(unlockChest(getPlayer()));
+                responseBuilder.isQuestion(true);
                 break;
             case "use":
                 responseBuilder.response(UsePower(getPlayer(), command[1]));
@@ -83,7 +84,7 @@ public class Game {
             case "pickup":
                 responseBuilder.response(getPlayer().pickUpItem(Item.valueOf(command[1])));
                 break;
-                default:
+            default:
                 responseBuilder.response("Invalid command. Try again.");
         }
         if (boss == null) {

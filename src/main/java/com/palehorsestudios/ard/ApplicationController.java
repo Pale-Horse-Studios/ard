@@ -54,4 +54,12 @@ public class ApplicationController {
 
     return responseBuilder.build();
   }
+
+  @GetMapping(path = "/answer/{answer}", produces = "application/json")
+  @ResponseBody
+  public Response evaluateAnswer(@PathVariable String answer) {
+    Response.Builder responseBuilder = new Response.Builder();
+    responseBuilder.response(game.getPlayer().getCurrentRoom().submitAnswer(answer));
+    return responseBuilder.build();
+  }
 }

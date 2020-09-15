@@ -42,7 +42,6 @@ public class Chest {
      * @return
      */
     public String askQuestion() {
-        List<Item> result = new ArrayList<>();
         StringBuilder chestQuestion = new StringBuilder();
         if (!broken) {
             chestQuestion.append("You approach a chest and a question appears...");
@@ -53,16 +52,6 @@ public class Chest {
                 chestQuestion.append("\n").append(index).append(". ").append(answer);
                 index += 1;
             }
-
-            // Todo: Transform this to be more web suitable
-//            int choice = getInput(IntStream.range(0, answers.size()).mapToObj(e -> List.of("" + e, answers.get(e)))
-//                    .collect(Collectors.toList()));
-//            if (answers.get(choice).equals(puzzle.getAnswer())) {
-//                System.out.println("The " + Codes.Chest.withColor("chest") + " unlocks with a loud click");
-//                result = reward;
-//            } else {
-//                chestQuestion.append("The chest makes a grunt and refuses to open");
-//            }
         } else {
             chestQuestion.append("The chest does nothing");
         }
@@ -70,7 +59,13 @@ public class Chest {
         return chestQuestion.toString();
     }
 
-    // TODO: Return reward: List<Item> if player got the question right
+    List<Item> evaluateAnswer(String answer) {
+        List<Item> result = new ArrayList<>();
+        if (puzzle.getAnswer().toLowerCase().equals(answer.toLowerCase())) {
+            result = reward;
+        }
+        return result;
+    }
 
     /**
      * Helper method to parse the inputs for given list of options.

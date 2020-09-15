@@ -225,15 +225,22 @@ public class Room {
         StringBuilder vsb = new StringBuilder();
         if (chest != null) {
             vsb.append(chest.askQuestion());
-//            List<Item> reward = chest.askQuestion();
-//            if (reward.size() > 0) {
-//                vsb.append("The ").append(Codes.Chest.withColor("chest")).append(" empties its contents onto the floor.");
-//            }
-//            this.addAllItems(reward);
         } else {
             vsb.append("No ").append(Codes.Chest.withColor("chest")).append(" in this room.");
         }
         return vsb.toString();
+    }
+
+    public String submitAnswer(String answer) {
+        StringBuilder sb = new StringBuilder();
+        List<Item> reward = chest.evaluateAnswer(answer);
+        if (reward.size() > 0) {
+            this.addAllItems(reward);
+            sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and empties its contents onto the floor.");
+        } else {
+            sb.append("The chest makes a grunt and refuses to open");
+        }
+        return sb.toString();
     }
 
     @Override
