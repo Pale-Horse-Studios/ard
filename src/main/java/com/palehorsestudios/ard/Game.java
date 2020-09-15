@@ -31,6 +31,10 @@ public class Game {
     public Player getPlayer() {
         return player;
     }
+    // TODO: revise....at least access level
+    void setPlayer(Player player) {
+        this.player = player;
+    }
 
     public RoomMap getGameMap() {
         return gameMap;
@@ -92,23 +96,10 @@ public class Game {
             keepScores(player);
             responseBuilder.gameOver(true);
         }
-        if(combatEngine.checkIfPlayerAlive(player)) {
+        if(!combatEngine.checkIfPlayerAlive(player)) {
             responseBuilder.gameOver(true);
         }
         return responseBuilder.build();
-    }
-
-    /**
-     * Method to start a new game. Prints out a welcome message and game banner.
-     */
-    public void newGame() {
-        // new game logic
-        ConsoleManager.gameIntro();
-        player = ConsoleManager.choosePlayer(gameMap);
-
-        // quit message
-//        System.out.println("Thanks for playing! Come play again");
-
     }
 
     /*

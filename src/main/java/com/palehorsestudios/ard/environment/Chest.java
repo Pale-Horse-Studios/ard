@@ -4,6 +4,7 @@ import com.palehorsestudios.ard.util.Codes;
 import com.palehorsestudios.ard.util.ConsoleManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -40,27 +41,36 @@ public class Chest {
      *
      * @return
      */
-    public List<Item> askQuestion() {
+    public String askQuestion() {
         List<Item> result = new ArrayList<>();
+        StringBuilder chestQuestion = new StringBuilder();
         if (!broken) {
-            System.out.println("You approach a chest and a question appears...");
-            System.out.println(puzzle.getQuestion());
+            chestQuestion.append("You approach a chest and a question appears...");
+            chestQuestion.append("\n").append(puzzle.getQuestion());
+            int index = 1;
             List<String> answers = puzzle.getAllAnswers();
-            int choice = getInput(IntStream.range(0, answers.size()).mapToObj(e -> List.of("" + e, answers.get(e)))
-                    .collect(Collectors.toList()));
-
-            if (answers.get(choice).equals(puzzle.getAnswer())) {
-                System.out.println("The " + Codes.Chest.withColor("chest") + " unlocks with a loud click");
-                result = reward;
-            } else {
-                System.out.println("The chest makes a grunt and refuses to open");
+            for (String answer : answers) {
+                chestQuestion.append("\n").append(index).append(". ").append(answer);
+                index += 1;
             }
+
+            // Todo: Transform this to be more web suitable
+//            int choice = getInput(IntStream.range(0, answers.size()).mapToObj(e -> List.of("" + e, answers.get(e)))
+//                    .collect(Collectors.toList()));
+//            if (answers.get(choice).equals(puzzle.getAnswer())) {
+//                System.out.println("The " + Codes.Chest.withColor("chest") + " unlocks with a loud click");
+//                result = reward;
+//            } else {
+//                chestQuestion.append("The chest makes a grunt and refuses to open");
+//            }
         } else {
-            System.out.println("The chest does nothing");
+            chestQuestion.append("The chest does nothing");
         }
         broken = true;
-        return result;
+        return chestQuestion.toString();
     }
+
+    // TODO: Return reward: List<Item> if player got the question right
 
     /**
      * Helper method to parse the inputs for given list of options.
