@@ -70,7 +70,10 @@ public class Game {
                 break;
             case "unlock":
                 responseBuilder.response(unlockChest(getPlayer()));
-                responseBuilder.isQuestion(true);
+                if(getPlayer().getCurrentRoom().getChest() != null
+                    && !getPlayer().getCurrentRoom().getChest().isBroken()) {
+                    responseBuilder.isQuestion(true);
+                }
                 break;
             case "use":
                 responseBuilder.response(UsePower(getPlayer(), command[1]));
@@ -86,6 +89,7 @@ public class Game {
                 break;
             default:
                 responseBuilder.response("Invalid command. Try again.");
+                break;
         }
         if (boss == null) {
             boss = MonsterFactory.createBossMonster(player);

@@ -14,8 +14,7 @@ import static com.palehorsestudios.ard.util.InputValidation.VALIDATE_CHARACTER_S
 
 @Controller
 public class ApplicationController {
-  Game game;
-  boolean isPlayerInitiated = false;
+  private Game game;
 
   @GetMapping("/")
   public String getHome() {

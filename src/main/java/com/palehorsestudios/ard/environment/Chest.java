@@ -20,6 +20,10 @@ public class Chest {
         reward = makeAward();
     }
 
+    public boolean isBroken() {
+        return broken;
+    }
+
     /**
      * Helper method to get a bunch of random items (not power stones) and put it into reward list.
      */

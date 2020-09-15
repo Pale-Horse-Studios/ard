@@ -70,6 +70,10 @@ public class Room {
         return id;
     }
 
+    public Chest getChest() {
+        return chest;
+    }
+
     /**
      * Adds item to room's item list
      *
@@ -233,12 +237,16 @@ public class Room {
 
     public String submitAnswer(String answer) {
         StringBuilder sb = new StringBuilder();
-        List<Item> reward = chest.evaluateAnswer(answer);
-        if (reward.size() > 0) {
-            this.addAllItems(reward);
-            sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and empties its contents onto the floor.");
+        if(chest != null) {
+            List<Item> reward = chest.evaluateAnswer(answer);
+            if (reward.size() > 0) {
+                this.addAllItems(reward);
+                sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and empties its contents onto the floor.");
+            } else {
+                sb.append("The chest makes a grunt and refuses to open");
+            }
         } else {
-            sb.append("The chest makes a grunt and refuses to open");
+            sb.append("No ").append(Codes.Chest.withColor("chest")).append(" in this room.");
         }
         return sb.toString();
     }
