@@ -98,6 +98,12 @@ public class Game {
         return responseBuilder.build();
     }
 
+    Response help() {
+        Response.Builder responseBuilder = new Response.Builder();
+        responseBuilder.response(ConsoleManager.gameExplanation());
+        return responseBuilder.build();
+    }
+
     /**
      * Method to start a new game. Prints out a welcome message and game banner.
      */

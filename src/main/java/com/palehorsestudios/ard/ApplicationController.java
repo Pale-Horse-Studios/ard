@@ -30,4 +30,10 @@ public class ApplicationController {
   public Response doCommand(@PathVariable String cmd) {
     return game.play(cmd);
   }
+
+  @GetMapping(path = "/help", produces = "application/json")
+  @ResponseBody
+  public Response getHelp() {
+    return game.help();
+  }
 }
