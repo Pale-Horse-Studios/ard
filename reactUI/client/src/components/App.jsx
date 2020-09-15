@@ -29,21 +29,21 @@ class App extends React.Component {
     // Send GET Request to /command/?command
     let route;
     route = this.state.characterSelected ? "character" : "command";
-
     const userInput = this.state.command;
     axios
       .get(`/${route}/${userInput}`)
       .then(({ data }) => {
         // Update player & room
         let { response, characterSelected } = data;
-        console.log(data);
         let prompt = this.cleanUpResponse(response);
         this.setState({
           ascii: false,
           prompt,
           characterSelected,
         });
-        this.updateStatus();
+        if (!characterSelected) {
+          this.updateStatus();
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -63,7 +63,6 @@ class App extends React.Component {
         this.setState({
           status,
         });
-        this.updateStatus();
       })
       .catch((err) => {
         console.log(err);
@@ -86,7 +85,6 @@ class App extends React.Component {
     axios
       .get("/intro")
       .then(({ data }) => {
-        console.log(data);
         let { response, characterSelected } = data;
         let prompt = this.cleanUpResponse(response);
         this.setState({
