@@ -50,7 +50,7 @@ class App extends React.Component {
           question,
         });
         if (!characterSelected || !question) {
-          this.updateStatus();
+          // this.updateStatus();
         }
       })
       .catch((err) => {
