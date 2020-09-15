@@ -13,7 +13,7 @@ class App extends React.Component {
       status: [],
       ascii: false,
       characterSelected: false,
-      isQuestion: false,
+      question: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -28,20 +28,28 @@ class App extends React.Component {
     event.preventDefault();
     // Send GET Request to /command/?command
     let route;
-    route = this.state.characterSelected ? "character" : "command";
+    if (this.state.characterSelected) {
+      route = "character";
+    } else if (this.state.question) {
+      route = "answer";
+    } else {
+      route = "command";
+    }
     const userInput = this.state.command;
     axios
       .get(`/${route}/${userInput}`)
       .then(({ data }) => {
+        console.log(data);
         // Update player & room
-        let { response, characterSelected } = data;
+        let { response, characterSelected, question } = data;
         let prompt = this.cleanUpResponse(response);
         this.setState({
           ascii: false,
           prompt,
           characterSelected,
+          question,
         });
-        if (!characterSelected) {
+        if (!characterSelected || !question) {
           this.updateStatus();
         }
       })
@@ -85,12 +93,13 @@ class App extends React.Component {
     axios
       .get("/intro")
       .then(({ data }) => {
-        let { response, characterSelected } = data;
+        let { response, characterSelected, question } = data;
         let prompt = this.cleanUpResponse(response);
         this.setState({
           ascii: true,
           prompt,
           characterSelected,
+          question,
         });
       })
       .catch((err) => {

@@ -35,10 +35,17 @@ public abstract class Player {
      * and remove the item from the room item list
      * if input is not in Item Enum, throw Exception
      */
-    public String pickUpItem(Item item) {
-        if (currentRoom.getItems().contains(item)) {
-            itemsInventory.add(item);
-            currentRoom.grabItem(item);
+    public String pickUpItem(String item) {
+        boolean validItem = false;
+        for(Item i : Item.values()) {
+            if (i.name().equals(item)) {
+                validItem = true;
+                break;
+            }
+        }
+        if (validItem && currentRoom.getItems().contains(Item.valueOf(item))) {
+            itemsInventory.add(Item.valueOf(item));
+            currentRoom.grabItem(Item.valueOf(item));
             return "Picked up " + item + ".";
         } else {
             return "Can't pick up! This item is not in the current room!";
@@ -50,12 +57,19 @@ public abstract class Player {
      * and add the item into the room item list
      * if input is not in Item Enum, throw Exception
      */
-    public String dropItem(Item item) {
+    public String dropItem(String item) {
         StringBuilder vsb = new StringBuilder();
-        if (itemsInventory.contains(item)) {
-            itemsInventory.remove(item);
-            currentRoom.addItem(item);
-            vsb.append(item + " dropped.");
+        boolean validItem = false;
+        for(Item i : Item.values()) {
+            if (i.name().equals(item)) {
+                validItem = true;
+                break;
+            }
+        }
+        if (validItem && itemsInventory.contains(Item.valueOf(item))) {
+            itemsInventory.remove(Item.valueOf(item));
+            currentRoom.addItem(Item.valueOf(item));
+            vsb.append(item).append(" dropped.");
         } else {
             vsb.append("Can't drop this item! It's not in player's item inventory!");
         }

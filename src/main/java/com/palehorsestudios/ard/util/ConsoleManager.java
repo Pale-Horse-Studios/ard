@@ -242,37 +242,19 @@ public class ConsoleManager {
      * @return Array of valid words
      */
     public static String[] scanInput(Map<String, Commands> commands, String str) {
-        String playerInput = null;
-        boolean valid = false;
+        String playerInput = str.strip().toLowerCase();
         String[] words;
-        int counter = 0;
-        do {
-            if (counter == 0) {
-                playerInput = str.strip().toLowerCase();
-                counter++;
-            } else {
-                playerInput = scanner().nextLine().strip().toLowerCase();
-            }
-            // check if input text is "exit." We need to do this on every input scanner.
-            exit(playerInput);
-            words = playerInput.split("\\W+");
-            if (words.length != 2) {
-                System.out.println("Not a valid action. Try again!");
-
-            } else {
+        words = playerInput.split("\\W+");
+            if (words.length == 2) {
                 if (commands.containsKey(words[0])) {
                     try {
                         words[1] = words[1].substring(0, 1).toUpperCase() + words[1].substring(1);
                         commands.get(words[0]).do_command(words[1]);
-                        valid = true;
                     } catch (IllegalArgumentException e) {
                         System.out.println("Not a valid action. Try again!");
                     }
-                } else {
-                    System.out.println("Invalid command. Try again!");
                 }
             }
-        } while (!valid);
         return words;
     }
 
