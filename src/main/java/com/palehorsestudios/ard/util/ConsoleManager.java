@@ -61,6 +61,12 @@ public class ConsoleManager {
         intro.append("Welcome to " + Colors.CYAN.negative("ARD") + ", the game where you get "
                 + Colors.CYAN.toColor("Another Random Destiny") + " every time you play!");
         intro.append("\nTo learn about the game, type \"help me\".");
+
+        intro.append("\n\n").append("Please just type in the letter 'A' or 'B' to choose the type of ")
+            .append("\n").append(Codes.Player.withColor("player")).append(" you want to play with.")
+            .append("\n").append("A: ").append(Codes.Player.withColor("Wolverine")).append(" has special ability of health boost.")
+            .append("\n").append("B: ").append(Codes.Player.withColor("Iron Man")).append(" has special ability to randomly generate one item that's already in inventory.");
+
         return intro.toString();
     }
 

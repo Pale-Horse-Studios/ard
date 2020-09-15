@@ -10,7 +10,10 @@ class App extends React.Component {
     this.state = {
       prompt: [],
       command: "",
+      status: [],
       ascii: false,
+      characterSelected: false,
+      isQuestion: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -24,23 +27,46 @@ class App extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     // Send GET Request to /command/?command
-    const { command } = this.state;
+    let route;
+    route = this.state.characterSelected ? "character" : "command";
+    const userInput = this.state.command;
     axios
-      .get(`/command/${command}`)
+      .get(`/${route}/${userInput}`)
       .then(({ data }) => {
         // Update player & room
-        let { response } = data;
+        let { response, characterSelected } = data;
         let prompt = this.cleanUpResponse(response);
         this.setState({
           ascii: false,
           prompt,
+          characterSelected,
         });
+        if (!characterSelected) {
+          this.updateStatus();
+        }
       })
       .catch((err) => {
         console.log(err);
       });
 
     this.initialize();
+  }
+
+  updateStatus() {
+    const currentStatus = "look around";
+    axios
+      .get(`/command/${currentStatus}`)
+      .then(({ data }) => {
+        // Update player & room
+        let { response } = data;
+        let status = this.cleanUpResponse(response);
+        this.setState({
+          status,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   initialize() {
@@ -59,9 +85,13 @@ class App extends React.Component {
     axios
       .get("/intro")
       .then(({ data }) => {
-        let { response } = data;
+        let { response, characterSelected } = data;
         let prompt = this.cleanUpResponse(response);
-        this.setState({ ascii: true, prompt });
+        this.setState({
+          ascii: true,
+          prompt,
+          characterSelected,
+        });
       })
       .catch((err) => {
         console.log("Error fetching data from server: ", err);
@@ -70,13 +100,13 @@ class App extends React.Component {
 
   render() {
     const msg = this.state.prompt;
-    let { ascii } = this.state;
+    let { ascii, status } = this.state;
     return (
       <div>
         <h1 className="title">A.R.D.</h1>
 
         <div className="mainScreen">
-          <pre>
+          <div className="message">
             {msg.length > 0
               ? msg.map((line, idx) => {
                   return (
@@ -90,7 +120,21 @@ class App extends React.Component {
                   );
                 })
               : null}
-          </pre>
+          </div>
+          <div className="status">
+            <h3 className="status-title">--------- S T A T U S ---------</h3>
+            {status.length > 0
+              ? status.map((line, idx) => (
+                  <Display
+                    key={idx + line}
+                    idx={idx}
+                    line={line}
+                    length={msg.length}
+                    ascii={ascii}
+                  />
+                ))
+              : null}
+          </div>
         </div>
         <form onSubmit={this.handleSubmit} className="userInput">
           <input
