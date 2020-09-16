@@ -83,7 +83,7 @@ public class Game {
             case "pickup":
                 responseBuilder.response(getPlayer().pickUpItem(Item.valueOf(command[1])));
                 break;
-                default:
+            default:
                 responseBuilder.response("Invalid command. Try again.");
         }
         if (boss == null) {

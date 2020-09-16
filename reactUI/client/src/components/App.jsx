@@ -101,8 +101,9 @@ class App extends React.Component {
   render() {
     const msg = this.state.prompt;
     let { ascii, status } = this.state;
+    let counter = 1;
     return (
-      <div>
+      <div className="main">
         <h1 className="title">A.R.D.</h1>
 
         <div className="mainScreen">
@@ -121,20 +122,21 @@ class App extends React.Component {
                 })
               : null}
           </div>
-          <div className="status">
-            <h3 className="status-title">--------- S T A T U S ---------</h3>
             {status.length > 0
-              ? status.map((line, idx) => (
-                  <Display
-                    key={idx + line}
-                    idx={idx}
-                    line={line}
-                    length={msg.length}
-                    ascii={ascii}
-                  />
-                ))
+              ? <div className="status">
+                  <h3 className="status-title">--------- S T A T U S ---------</h3>
+                  {status.map((line, idx) => (
+                      <Display
+                        key={idx + line}
+                        idx={idx}
+                        line={line}
+                        length={msg.length}
+                        ascii={ascii}
+                      />
+                ))}
+                </div>
               : null}
-          </div>
+
         </div>
         <form onSubmit={this.handleSubmit} className="userInput">
           <input
