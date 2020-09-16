@@ -1,8 +1,5 @@
 package com.palehorsestudios.ard.util;
 
-import com.palehorsestudios.ard.characters.Player;
-import com.palehorsestudios.ard.characters.PlayerFactory;
-import com.palehorsestudios.ard.environment.RoomMap;
 import com.palehorsestudios.ard.util.commands.Commands;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -135,41 +132,6 @@ public class ConsoleManager {
     }
 
     /**
-     * Method to choose a player class from given options.
-     *
-     * @param map Game map to get starting point for player.
-     * @return newly created player
-     */
-    public static Player choosePlayer(RoomMap map) {
-//        String[] instructions = {
-//                "Please just type in the letter 'A' or 'B' to choose the type of "
-//                        + Codes.Player.withColor("player") + " you want to play with.",
-//                "A: [" + Codes.Player.withColor("Wolverine") + "] has special ability of health boost;\n" +
-//                        "B: [" + Codes.Player.withColor("Iron Man") + "] has special ability to randomly " +
-//                        "generate one item that's already in inventory.",
-//                "Wrong input!\n" + "Enter A or B: ",
-//        };
-//
-//        System.out.println(instructions[0]);
-//        System.out.println(instructions[1]);
-//        String playerChoice = scanner.nextLine();
-//        exit(playerChoice);
-//        while (!playerChoice.toUpperCase().strip().equals(Character.toString('A')) &&
-//                !playerChoice.toUpperCase().strip().equals(Character.toString('B'))) {
-//            System.out.println(instructions[2]);
-//            System.out.println(instructions[0]);
-//            System.out.println(instructions[1]);
-//            playerChoice = scanner.nextLine();
-//            exit(playerChoice);
-//        }
-//        String playName = (playerChoice.toUpperCase().strip().equals(Character.toString('A'))) ? "Wolverine" : "Iron Man";
-//        System.out.println("Player type: [" + Codes.Player.withColor(playName) + "] has been chosen.");
-
-//        return PlayerFactory.createPlayer(map.getStart(), new ArrayList<>(), playerChoice);
-        return PlayerFactory.createPlayer(map.getStart(), new ArrayList<>(), "A");
-    }
-
-    /**
      * method made package level access only on purpose
      * <p>
      * Helper method to load in trieNodes from a given Document Node. Converting to TrieNodes for ease of traversing
@@ -216,7 +178,7 @@ public class ConsoleManager {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse("resources/menu/help_menu.xml");
-            menuNodeList = doc.getElementsByTagName("resources/menu");
+            menuNodeList = doc.getElementsByTagName("menu");
 
             MenuTrieNode menu = recursiveHelper(menuNodeList.item(0));
             menu.setParent(menu);

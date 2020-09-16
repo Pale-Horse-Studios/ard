@@ -2,6 +2,7 @@ package com.palehorsestudios.ard.characters;
 
 import com.palehorsestudios.ard.environment.Item;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

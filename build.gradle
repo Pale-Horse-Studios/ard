@@ -58,3 +58,14 @@ sourceSets {
         }
     }
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.palehorsestudios.ard.ArdApplication'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
