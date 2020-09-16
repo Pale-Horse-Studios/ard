@@ -4,6 +4,7 @@ import com.palehorsestudios.ard.characters.Monster;
 import com.palehorsestudios.ard.characters.MonsterFactory;
 import com.palehorsestudios.ard.characters.Player;
 import com.palehorsestudios.ard.combat.combatEngine;
+import com.palehorsestudios.ard.environment.Chest;
 import com.palehorsestudios.ard.environment.Direction;
 import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.environment.RoomMap;
@@ -52,6 +53,7 @@ public class Game {
     Response play(String cmd) {
         String[] command = TextParser.parser(cmd);
         Response.Builder responseBuilder = new Response.Builder();
+
         if(command.length >= 2) {
             switch (command[0]) {
                 case "move":
@@ -70,8 +72,9 @@ public class Game {
                     responseBuilder.response(ConsoleManager.gameExplanation());
                     break;
                 case "unlock":
-                    if(getPlayer().getCurrentRoom().getChest() != null
-                        && !getPlayer().getCurrentRoom().getChest().isBroken()) {
+                    Chest chest = getPlayer().getCurrentRoom().getChest();
+                    if(chest != null
+                        && chest.isBroken()) {
                         responseBuilder.isQuestion(true);
                     }
                     responseBuilder.response(unlockChest(getPlayer()));
@@ -158,9 +161,7 @@ public class Game {
      * Method to invoke unlock chest method
      */
     String unlockChest(Player player) {
-        StringBuilder vsb = new StringBuilder();
-        vsb.append(player.getCurrentRoom().unlockChest());
-        return vsb.toString();
+        return player.getCurrentRoom().unlockChest();
     }
 
     /**

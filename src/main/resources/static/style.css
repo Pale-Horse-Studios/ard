@@ -3,6 +3,13 @@ body {
   font-family: 'VT323', monospace;
 }
 
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+}
+
 h1 {
   margin: 0;
   text-align: center;
@@ -24,13 +31,17 @@ h1 {
   height: 100%;
   background-color: #ffffff;
   font-size: larger;
-  padding: 0 0 2rem;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .mainScreen p {
-  width: 60rem;
+  margin: 0 2rem;
   text-align: justify;
+}
+
+.message {
+  width: 100%;
+  margin: 1rem;
 }
 
 .ascii-line {
@@ -39,7 +50,8 @@ h1 {
 
 .status {
   border-top: dotted 5px red;
-  height: 235px;
+  height: 100%;
+  margin: 1rem;
 }
 
 .status-title {
