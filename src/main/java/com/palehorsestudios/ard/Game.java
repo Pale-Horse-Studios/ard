@@ -192,7 +192,7 @@ public class Game {
     public static void keepScores(Player player) {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new FileWriter("src/main/resources/scores/final_scores.txt", true));
+            writer = new PrintWriter(new FileWriter("resources/scores/final_scores.txt", true));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -22,8 +22,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.palehorsestudios.ard.util.ExitGame.exit;
-
 public class ConsoleManager {
     private static final Scanner scanner = new Scanner(System.in);
     private static MenuTrieNode menu = read_xml();
@@ -40,7 +38,7 @@ public class ConsoleManager {
     private static String gameTitle() {
         String result;
         try {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("src/main/resources/title_art/banners.xml");
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("resources/title_art/banners.xml");
             NodeList banners = document.getElementsByTagName("banner");
             result = banners.item(ThreadLocalRandom.current().nextInt(banners.getLength())).getTextContent();
         } catch (IOException | ParserConfigurationException | SAXException e) {
@@ -217,8 +215,8 @@ public class ConsoleManager {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse("src/main/resources/menu/help_menu.xml");
-            menuNodeList = doc.getElementsByTagName("menu");
+            Document doc = builder.parse("resources/menu/help_menu.xml");
+            menuNodeList = doc.getElementsByTagName("resources/menu");
 
             MenuTrieNode menu = recursiveHelper(menuNodeList.item(0));
             menu.setParent(menu);

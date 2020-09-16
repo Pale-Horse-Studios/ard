@@ -20,7 +20,7 @@ public class PuzzleMaker {
      */
     public PuzzleMaker() {
         try {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("src/main/resources/puzzles/many_questions.xml");
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("resources/puzzles/many_questions.xml");
             puzzles = document.getElementsByTagName("puzzle");
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
