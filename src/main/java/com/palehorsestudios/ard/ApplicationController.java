@@ -14,8 +14,7 @@ import static com.palehorsestudios.ard.util.InputValidation.VALIDATE_CHARACTER_S
 
 @Controller
 public class ApplicationController {
-  Game game;
-  boolean isPlayerInitiated = false;
+  private Game game;
 
   @GetMapping("/")
   public String getHome() {
@@ -52,6 +51,14 @@ public class ApplicationController {
       responseBuilder.response(e.getMessage());
     }
 
+    return responseBuilder.build();
+  }
+
+  @GetMapping(path = "/answer/{answer}", produces = "application/json")
+  @ResponseBody
+  public Response evaluateAnswer(@PathVariable String answer) {
+    Response.Builder responseBuilder = new Response.Builder();
+    responseBuilder.response(game.getPlayer().getCurrentRoom().submitAnswer(answer));
     return responseBuilder.build();
   }
 }

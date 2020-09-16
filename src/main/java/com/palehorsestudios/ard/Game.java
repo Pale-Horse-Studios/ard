@@ -4,6 +4,7 @@ import com.palehorsestudios.ard.characters.Monster;
 import com.palehorsestudios.ard.characters.MonsterFactory;
 import com.palehorsestudios.ard.characters.Player;
 import com.palehorsestudios.ard.combat.combatEngine;
+import com.palehorsestudios.ard.environment.Chest;
 import com.palehorsestudios.ard.environment.Direction;
 import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.environment.RoomMap;
@@ -52,39 +53,50 @@ public class Game {
     Response play(String cmd) {
         String[] command = TextParser.parser(cmd);
         Response.Builder responseBuilder = new Response.Builder();
-        switch (command[0]) {
-            case "move":
-                int size = getGameMap().size();
-                getGameMap().moveCharacter(getPlayer(), Direction.valueOf(command[1]));
-                responseBuilder.response("Moved " + Direction.valueOf(command[1]) + ".");
-                increaseScore(size);
-                break;
-            case "look":
-                responseBuilder.response(Look(getPlayer(), command[1]));
-                break;
-            case "drop":
-                responseBuilder.response(getPlayer().dropItem(Item.valueOf(command[1])));
-                break;
-            case "help":
-                responseBuilder.response(ConsoleManager.gameExplanation());
-                break;
-            case "unlock":
-                responseBuilder.response(unlockChest(getPlayer()));
-                break;
-            case "use":
-                responseBuilder.response(UsePower(getPlayer(), command[1]));
-                break;
-            case "flight":
-                responseBuilder.response(Flight(getPlayer(), command[1]));
-                break;
-            case "fight":
-                responseBuilder.response(Fight(getPlayer(), command[1]));
-                break;
-            case "pickup":
-                responseBuilder.response(getPlayer().pickUpItem(Item.valueOf(command[1])));
-                break;
-            default:
-                responseBuilder.response("Invalid command. Try again.");
+
+        if(command.length >= 2) {
+            switch (command[0]) {
+                case "move":
+                    int size = getGameMap().size();
+                    getGameMap().moveCharacter(getPlayer(), Direction.valueOf(command[1]));
+                    responseBuilder.response("Moved " + Direction.valueOf(command[1]) + ".");
+                    increaseScore(size);
+                    break;
+                case "look":
+                    responseBuilder.response(Look(getPlayer(), command[1]));
+                    break;
+                case "drop":
+                    responseBuilder.response(getPlayer().dropItem(command[1]));
+                    break;
+                case "help":
+                    responseBuilder.response(ConsoleManager.gameExplanation());
+                    break;
+                case "unlock":
+                    Chest chest = getPlayer().getCurrentRoom().getChest();
+                    if(chest != null
+                        && chest.isBroken()) {
+                        responseBuilder.isQuestion(true);
+                    }
+                    responseBuilder.response(unlockChest(getPlayer()));
+                    break;
+                case "use":
+                    responseBuilder.response(UsePower(getPlayer(), command[1]));
+                    break;
+                case "flight":
+                    responseBuilder.response(Flight(getPlayer(), command[1]));
+                    break;
+                case "fight":
+                    responseBuilder.response(Fight(getPlayer(), command[1]));
+                    break;
+                case "pickup":
+                    responseBuilder.response(getPlayer().pickUpItem(command[1]));
+                    break;
+                default:
+                    responseBuilder.response("Invalid command. Try again.");
+                    break;
+            }
+        } else {
+            responseBuilder.response("Invalid command. Try again.");
         }
         if (boss == null) {
             boss = MonsterFactory.createBossMonster(player);
@@ -149,9 +161,7 @@ public class Game {
      * Method to invoke unlock chest method
      */
     String unlockChest(Player player) {
-        StringBuilder vsb = new StringBuilder();
-        vsb.append(player.getCurrentRoom().unlockChest());
-        return vsb.toString();
+        return player.getCurrentRoom().unlockChest();
     }
 
     /**
