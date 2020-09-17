@@ -29,7 +29,9 @@ public class Ironman extends Player {
             if (getCurrentRoom().getMonsters().size() > 0) {
                 sb.append(MonsterFightsPlayer(getCurrentRoom().getMonsters().get(0), this));
             }
-            sb.append("\n").append(fightRoomMonster(this));
+            if(this.getLife() > 0) {
+                sb.append("\n").append(fightRoomMonster(this));
+            }
         }
         return sb.toString();
     }
