@@ -4,10 +4,7 @@ import com.palehorsestudios.ard.characters.Monster;
 import com.palehorsestudios.ard.characters.MonsterFactory;
 import com.palehorsestudios.ard.util.Codes;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Room {
@@ -184,6 +181,18 @@ public class Room {
         return sb.toString();
     }
 
+    public Map<String, String> getRoomInfo() {
+        Map<String, String> roomInfo = new HashMap<>();
+
+        roomInfo.put("id", String.valueOf(getId()));
+        roomInfo.put("desc", getDescription());
+        roomInfo.put("items", itemsPresent());
+        roomInfo.put("monsters", monstersPresent());
+        roomInfo.put("chest", chestPresent());
+
+        return roomInfo;
+    }
+
     /**
      * Check for items present in a room
      *
@@ -191,7 +200,7 @@ public class Room {
      */
     private String itemsPresent() {
         if (getItems().size() > 0) {
-            return getItems().size() + " item(s): " + getItems().stream().map(e -> Codes.Item.withColor(e.toString())).collect(Collectors.joining(", "));
+            return getItems().stream().map(item -> item.toString()).collect(Collectors.joining(", "));
         } else {
             return "No items present in this room.";
         }
@@ -204,9 +213,27 @@ public class Room {
      */
     private String monstersPresent() {
         if (getMonsters().size() > 0) {
-            return getMonsters().size() + " monster:" + getMonsters().toString();
+            return getAllMonsters().toString();
         } else {
             return "No monsters present in this room.";
+        }
+    }
+
+
+    private String getAllMonsters() {
+        return getMonsters().stream().map(monster -> monster.getName())
+                    .collect(Collectors.joining(", "));
+    }
+    /**
+     * Check for chest presents in a room
+     *
+     * @return Prints chest if existing
+     */
+    private String chestPresent() {
+        if (chest != null) {
+            return chest.toString();
+        } else {
+            return "No chest present in this room.";
         }
     }
 
@@ -237,17 +264,16 @@ public class Room {
 
     public String submitAnswer(String answer) {
         StringBuilder sb = new StringBuilder();
-        if(chest != null) {
-            List<Item> reward = chest.evaluateAnswer(answer);
-            if (reward.size() > 0) {
-                this.addAllItems(reward);
-                sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and empties its contents onto the floor.");
-            } else {
-                sb.append("The chest makes a grunt and refuses to open");
-            }
+        List<Item> reward = chest.evaluateAnswer(answer);
+        if (reward.size() > 0) {
+            this.addAllItems(reward);
+            sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and empties its contents onto the floor.");
+        } else if (reward.size() == 0) {
+            sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and ... it's empty.");
         } else {
-            sb.append("No ").append(Codes.Chest.withColor("chest")).append(" in this room.");
+            sb.append("The chest makes a grunt and refuses to open");
         }
+
         return sb.toString();
     }
 

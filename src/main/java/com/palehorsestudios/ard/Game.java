@@ -10,6 +10,7 @@ import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.environment.RoomMap;
 import com.palehorsestudios.ard.util.Codes;
 import com.palehorsestudios.ard.util.ConsoleManager;
+import com.palehorsestudios.ard.util.InputValidation;
 import com.palehorsestudios.ard.util.TextParser;
 
 import java.io.FileWriter;
@@ -53,7 +54,6 @@ public class Game {
     Response play(String cmd) {
         String[] command = TextParser.parser(cmd);
         Response.Builder responseBuilder = new Response.Builder();
-
         if(command.length >= 2) {
             switch (command[0]) {
                 case "move":
@@ -74,7 +74,7 @@ public class Game {
                 case "unlock":
                     Chest chest = getPlayer().getCurrentRoom().getChest();
                     if(chest != null
-                        && chest.isBroken()) {
+                        && !chest.isBroken()) {
                         responseBuilder.isQuestion(true);
                     }
                     responseBuilder.response(unlockChest(getPlayer()));
@@ -160,9 +160,7 @@ public class Game {
     /**
      * Method to invoke unlock chest method
      */
-    String unlockChest(Player player) {
-        return player.getCurrentRoom().unlockChest();
-    }
+    String unlockChest(Player player) { return player.getCurrentRoom().unlockChest(); }
 
     /**
      * Method to call increment score for the player when the gamemap has increased in size.
@@ -189,6 +187,12 @@ public class Game {
         return sb.toString();
     }
 
+    // TODO: Build a separate method for status bar
+//    public Response getGameInfo() {
+//        Response.Builder responseBuilder = new Response.Builder();
+//        Player currentPlayer = getPlayer();
+//        responseBuilder.response(getPlayer().printStats());
+//    }
 
     public static void keepScores(Player player) {
         PrintWriter writer = null;

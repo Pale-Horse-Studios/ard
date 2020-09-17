@@ -27,7 +27,18 @@ public class ApplicationController {
   public Response getIntro() {
     Response.Builder responseBuilder = new Response.Builder();
     responseBuilder.characterSelected(true);
+    responseBuilder.banner(ConsoleManager.banner());
     return responseBuilder.response(ConsoleManager.gameIntro()).build();
+  }
+
+  @GetMapping(path = "/stat", produces = "application/json")
+  @ResponseBody
+  public Response getStatus() {
+    Response.Builder responseBuilder = new Response.Builder();
+    responseBuilder.playerInfo(game.getPlayer().getPlayerInfo());
+    responseBuilder.roomInfo(game.getPlayer().getCurrentRoom().getRoomInfo());
+
+    return responseBuilder.build();
   }
 
   @GetMapping(path = "/command/{cmd}", produces = "application/json")
