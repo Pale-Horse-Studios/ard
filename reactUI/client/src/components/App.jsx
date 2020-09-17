@@ -61,11 +61,8 @@ class App extends React.Component {
             prompt,
             characterSelected,
             question,
-<<<<<<< HEAD
             bannerDisplayed: true,
-=======
             gameOver,
->>>>>>> be7cd25e4b9bcb44b5abd9f6ebf6453eb6c208bd
           });
           if (!characterSelected && !question && !gameOver) {
             this.updateStatus();
