@@ -59,6 +59,10 @@ class App extends React.Component {
             question,
             gameOver,
           });
+<<<<<<< HEAD
+=======
+          console.log(this.state.gameOver + " : " + gameOver);
+>>>>>>> ff98eabd412cc479cc54eb83614a97b0daf578d6
           if (!characterSelected && !question && !gameOver) {
             this.updateStatus();
           }
