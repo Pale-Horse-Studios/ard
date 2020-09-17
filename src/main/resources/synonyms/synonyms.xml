@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<synonyms>
+    <command command="move">
+        <verb>run</verb>
+        <verb>travel</verb>
+        <verb>go</verb>
+        <verb>walk</verb>
+        <verb>proceed</verb>
+        <verb>head</verb>
+    </command>
+    <command command="look">
+        <verb>watch</verb>
+        <verb>investigate</verb>
+        <verb>reflect</verb>
+        <verb>see</verb>
+        <verb>reckon</verb>
+    </command>
+    <command command="drop">
+        <verb>drop-off</verb>
+        <verb>unload</verb>
+        <verb>throw</verb>
+        <verb>send</verb>
+        <verb>put</verb>
+        <verb>put-down</verb>
+        <verb>throw-away</verb>
+    </command>
+    <command command="unlock">
+        <verb>open</verb>
+        <verb>pop</verb>
+        <verb>crack</verb>
+        <verb>break</verb>
+    </command>
+    <command command="use">
+        <verb>utilize</verb>
+        <verb>exercise</verb>
+        <verb>practice</verb>
+        <verb>engage</verb>
+    </command>
+    <command command="flight">
+        <verb>fly</verb>
+    </command>
+    <command command="fight">
+        <verb>combat</verb>
+        <verb>battle</verb>
+        <verb>attack</verb>
+        <verb>punch</verb>
+        <verb>kick</verb>
+        <verb>karate-chop</verb>
+    </command>
+    <command command="pickup">
+        <verb>pick-up</verb>
+        <verb>pick</verb>
+        <verb>load</verb>
+        <verb>receive</verb>
+        <verb>get</verb>
+        <verb>lift-up</verb>
+        <verb>lift</verb>
+        <verb>collect</verb>
+        <verb>grab</verb>
+        <verb>take</verb>
+        <verb>capture</verb>
+    </command>
+</synonyms>

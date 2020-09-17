@@ -1,8 +1,6 @@
 package com.palehorsestudios.ard.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class InputValidation {
   public static String VALIDATE_CHARACTER_SELECTION(String userInput) throws InvalidInputException {
@@ -19,5 +17,17 @@ public class InputValidation {
     }
 
     return character.toString();
+  }
+
+  public static String VERB_SYNONYMS(String userInput) throws IllegalArgumentException {
+    Map<String, List<String>> synonyms = new HashMap<>();
+    synonyms = ConsoleManager.read_xml("synonyms/synonyms.xml", "command");
+    StringBuilder synonym = new StringBuilder();
+    for (Map.Entry<String, List<String>> verb : synonyms.entrySet()) {
+      if(verb.getValue().contains(userInput)) {
+        synonym.append(verb.getKey());
+      }
+    }
+    return synonym.toString();
   }
 }

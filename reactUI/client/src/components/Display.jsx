@@ -1,11 +1,7 @@
 import React from "react";
 
-const Display = ({ idx, line, length, ascii }) => {
-  let className = "line";
-  if (ascii) {
-    className += " ascii-line";
-  }
-  return <p className={className}>{line}</p>;
+const Display = ({ line, type }) => {
+  return <p className={type}>{line}</p>;
 };
 
 export default Display;

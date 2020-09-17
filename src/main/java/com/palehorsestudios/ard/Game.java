@@ -55,6 +55,7 @@ public class Game {
     } catch (IOException e) {
       e.printStackTrace();
     }
+
     StringBuilder sb = new StringBuilder();
     // read scores file
     try (BufferedReader bufferedReader =
@@ -158,6 +159,7 @@ public class Game {
               + " for this game: ");
       responseBuilder.gameOver(true);
     }
+
     if (!combatEngine.checkIfPlayerAlive(player)) {
       responseBuilder.response +=
           "\nPlease enter your name here to record your "
