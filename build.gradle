@@ -26,10 +26,6 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    set('springCloudVersion', "Hoxton.SR8")
-}
-
 dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'
@@ -51,6 +47,18 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
+test {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources", "resources"
+        }
+    }
+}
+
 jar {
     manifest {
         attributes(
@@ -60,14 +68,4 @@ jar {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-test {
-    useJUnitPlatform()
 }
