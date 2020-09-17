@@ -157,7 +157,6 @@ public class combatEngine {
      * @param monster current room's monster
      */
     private static String ifPlayerDeath(Monster monster, Player player) {
-        Game.keepScores(player);
         return "Sorry " + Codes.Monster.withColor(monster.getName()) + " killed "
                 + Codes.Player.withColor("you.");
     }

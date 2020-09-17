@@ -61,4 +61,12 @@ public class ApplicationController {
     responseBuilder.response(game.getPlayer().getCurrentRoom().submitAnswer(answer));
     return responseBuilder.build();
   }
+
+  @GetMapping(path = "/score/{name}", produces = "application/json")
+  @ResponseBody
+  public Response keepScore(@PathVariable String name) {
+    Response.Builder responseBuilder = new Response.Builder();
+    responseBuilder.response(Game.keepScores(name, game.getPlayer()));
+    return responseBuilder.build();
+  }
 }
