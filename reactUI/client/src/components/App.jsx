@@ -16,6 +16,7 @@ class App extends React.Component {
       characterSelected: false,
       question: false,
       help: false,
+      gameOver: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -29,7 +30,7 @@ class App extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     // Send GET Request to /command/?command
-    const { command, characterSelected, question } = this.state;
+    let { command, characterSelected, question, gameOver } = this.state;
     if (command.trim().toLowerCase().includes("help")) {
       this.setState({ help: true });
     } else if (command.trim().toLowerCase().includes("close")) {
@@ -40,23 +41,25 @@ class App extends React.Component {
         route = "character";
       } else if (question) {
         route = "answer";
+      } else if (gameOver) {
+        route = "score";
       } else {
         route = "command";
       }
       axios
         .get(`/${route}/${command}`)
         .then(({ data }) => {
-          console.log(data);
           // Update player & room
-          let { response, characterSelected, question } = data;
+          let { response, characterSelected, question, gameOver } = data;
           let prompt = this.cleanUpResponse(response);
           this.setState({
             ascii: false,
             prompt,
             characterSelected,
             question,
+            gameOver,
           });
-          if (!characterSelected || !question) {
+          if (!characterSelected && !question && !gameOver) {
             this.updateStatus();
           }
         })

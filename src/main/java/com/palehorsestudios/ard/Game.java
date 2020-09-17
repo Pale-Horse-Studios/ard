@@ -11,9 +11,16 @@ import com.palehorsestudios.ard.environment.RoomMap;
 import com.palehorsestudios.ard.util.Codes;
 import com.palehorsestudios.ard.util.ConsoleManager;
 import com.palehorsestudios.ard.util.TextParser;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -74,7 +81,7 @@ public class Game {
                 case "unlock":
                     Chest chest = getPlayer().getCurrentRoom().getChest();
                     if(chest != null
-                        && chest.isBroken()) {
+                        && !chest.isBroken()) {
                         responseBuilder.isQuestion(true);
                     }
                     responseBuilder.response(unlockChest(getPlayer()));
@@ -105,10 +112,11 @@ public class Game {
         if (boss != null && boss.getLife() <= 0) {
             responseBuilder.gameOverResult(Codes.Player.withColor(player.getName()) + " killed "
                 + Codes.Monster.withColor(boss.getName()) + "! You win!!!!");
-            keepScores(player);
+            responseBuilder.response("Please enter your name here to record your " + Codes.Score.withColor("score") + " for this game: ");
             responseBuilder.gameOver(true);
         }
         if(!combatEngine.checkIfPlayerAlive(player)) {
+            responseBuilder.response += "\nPlease enter your name here to record your " + Codes.Score.withColor("score") + " for this game: ";
             responseBuilder.gameOver(true);
         }
         return responseBuilder.build();
@@ -190,22 +198,28 @@ public class Game {
     }
 
 
-    public static void keepScores(Player player) {
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(new FileWriter("resources/scores/final_scores.txt", true));
+    static String keepScores(String name, Player player) {
+        Resource scoresFileResource = new ClassPathResource("scores/final_scores.txt");
+        // write score to file
+        try(PrintWriter writer = new PrintWriter(new FileWriter(scoresFileResource.getFile(), true))) {
+            LocalDateTime time = LocalDateTime.now();
+            writer.append("<Final score for this game @").append(String.valueOf(time)).append(">").append("\n");
+            writer.append("[").append(name).append("] (").append(player.getName()).append("): ").append(String.valueOf(player.getScore())).append(" points \n");
+            writer.println();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Please enter your name here to record your " + Codes.Score.withColor("score") + " for this game: ");
-        String name = ConsoleManager.scanner().nextLine();
-
-        LocalDateTime time = LocalDateTime.now();
-        writer.append("<Final score for this game @" + time + ">" + "\n");
-        writer.append("[" + name + "] (" + player.getName() + "): " + player.getScore() + " points \n");
-        writer.println();
-
-        writer.close();
+        StringBuilder sb = new StringBuilder();
+        // read scores file
+        try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ClassPathResource("scores/final_scores.txt").getInputStream()))) {
+            String line = bufferedReader.readLine();
+            while(line != null) {
+                sb.append(line).append("\n");
+                line = bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 }

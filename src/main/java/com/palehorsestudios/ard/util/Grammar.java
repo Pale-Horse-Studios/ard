@@ -1,5 +1,7 @@
 package com.palehorsestudios.ard.util;
 
+import org.springframework.core.io.ClassPathResource;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,7 +29,7 @@ public class Grammar {
      * Every option for each non-terminal is separated by a "|".
      */
     private void readRules() {
-        try(BufferedReader reader = new BufferedReader(new FileReader("resources/grammar/dungeon_grammar.txt"))) {
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource("grammar/dungeon_grammar.txt").getInputStream()))) {
 
             String line;
             while ((line = reader.readLine()) != null) {

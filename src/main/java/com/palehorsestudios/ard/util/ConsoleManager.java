@@ -1,6 +1,7 @@
 package com.palehorsestudios.ard.util;
 
 import com.palehorsestudios.ard.util.commands.Commands;
+import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -177,7 +178,7 @@ public class ConsoleManager {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse("resources/menu/help_menu.xml");
+            Document doc = builder.parse(new ClassPathResource("menu/help_menu.xml").getURI().toString());
             menuNodeList = doc.getElementsByTagName("menu");
 
             MenuTrieNode menu = recursiveHelper(menuNodeList.item(0));
