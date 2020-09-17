@@ -10,7 +10,6 @@ import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.environment.RoomMap;
 import com.palehorsestudios.ard.util.Codes;
 import com.palehorsestudios.ard.util.ConsoleManager;
-import com.palehorsestudios.ard.util.InputValidation;
 import com.palehorsestudios.ard.util.TextParser;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -56,99 +55,7 @@ public class Game {
     } catch (IOException e) {
       e.printStackTrace();
     }
-<<<<<<< HEAD
 
-    public Player getPlayer() {
-        return player;
-    }
-    // TODO: revise....at least access level
-    void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public RoomMap getGameMap() {
-        return gameMap;
-    }
-
-    public Monster getBoss() {
-        return boss;
-    }
-
-    /**
-     * Method to run the basic logic behind the game. Parse text, do command, return boolean if game is still going.
-     *
-     * @return
-     */
-    Response play(String cmd) {
-        String[] command = TextParser.parser(cmd);
-        Response.Builder responseBuilder = new Response.Builder();
-        if(command.length >= 2) {
-            switch (command[0]) {
-                case "move":
-                    int size = getGameMap().size();
-                    getGameMap().moveCharacter(getPlayer(), Direction.valueOf(command[1]));
-                    responseBuilder.response("Moved " + Direction.valueOf(command[1]) + ".");
-                    increaseScore(size);
-                    break;
-                case "look":
-                    responseBuilder.response(Look(getPlayer(), command[1]));
-                    break;
-                case "drop":
-                    responseBuilder.response(getPlayer().dropItem(command[1]));
-                    break;
-                case "help":
-                    responseBuilder.response(ConsoleManager.gameExplanation());
-                    break;
-                case "unlock":
-                    Chest chest = getPlayer().getCurrentRoom().getChest();
-                    if(chest != null
-                        && !chest.isBroken()) {
-                        responseBuilder.isQuestion(true);
-                    }
-                    responseBuilder.response(unlockChest(getPlayer()));
-                    break;
-                case "use":
-                    responseBuilder.response(UsePower(getPlayer(), command[1]));
-                    break;
-                case "flight":
-                    responseBuilder.response(Flight(getPlayer(), command[1]));
-                    break;
-                case "fight":
-                    responseBuilder.response(Fight(getPlayer(), command[1]));
-                    break;
-                case "pickup":
-                    responseBuilder.response(getPlayer().pickUpItem(command[1]));
-                    break;
-                default:
-                    responseBuilder.response("Invalid command. Try again.");
-                    break;
-            }
-        } else {
-            responseBuilder.response("Invalid command. Try again.");
-        }
-        if (boss == null) {
-            boss = MonsterFactory.createBossMonster(player);
-            player.getCurrentRoom().addMonster(boss);
-        }
-        if (boss != null && boss.getLife() <= 0) {
-            responseBuilder.gameOverResult(Codes.Player.withColor(player.getName()) + " killed "
-                + Codes.Monster.withColor(boss.getName()) + "! You win!!!!");
-            keepScores(player);
-            responseBuilder.gameOver(true);
-        }
-        if(!combatEngine.checkIfPlayerAlive(player)) {
-            responseBuilder.gameOver(true);
-        }
-        return responseBuilder.build();
-    }
-
-    /*
-    Stubbed out method to prepare for flight action
-     */
-    String Flight(Player player, String option) {
-        return "Flying " + option;
-        // run method to do the action
-=======
     StringBuilder sb = new StringBuilder();
     // read scores file
     try (BufferedReader bufferedReader =
@@ -162,7 +69,6 @@ public class Game {
       }
     } catch (IOException e) {
       e.printStackTrace();
->>>>>>> be7cd25e4b9bcb44b5abd9f6ebf6453eb6c208bd
     }
     return sb.toString();
   }
@@ -253,22 +159,7 @@ public class Game {
               + " for this game: ");
       responseBuilder.gameOver(true);
     }
-<<<<<<< HEAD
 
-    /**
-     * Method to invoke unlock chest method
-     */
-    String unlockChest(Player player) { return player.getCurrentRoom().unlockChest(); }
-
-    /**
-     * Method to call increment score for the player when the gamemap has increased in size.
-     */
-    void increaseScore(int previousSize) {
-        int newSize = gameMap.size();
-        if (newSize > previousSize) {
-            player.incrementScore();
-        }
-=======
     if (!combatEngine.checkIfPlayerAlive(player)) {
       responseBuilder.response +=
           "\nPlease enter your name here to record your "
@@ -315,7 +206,6 @@ public class Game {
         return player.printStats();
       default:
         return itemRequestDesc(option);
->>>>>>> be7cd25e4b9bcb44b5abd9f6ebf6453eb6c208bd
     }
   }
 
@@ -330,22 +220,6 @@ public class Game {
     if (newSize > previousSize) {
       player.incrementScore();
     }
-<<<<<<< HEAD
-
-    // TODO: Build a separate method for status bar
-//    public Response getGameInfo() {
-//        Response.Builder responseBuilder = new Response.Builder();
-//        Player currentPlayer = getPlayer();
-//        responseBuilder.response(getPlayer().printStats());
-//    }
-
-    public static void keepScores(Player player) {
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(new FileWriter("src/main/resources/scores/final_scores.txt", true));
-        } catch (IOException e) {
-            e.printStackTrace();
-=======
   }
 
   public String itemRequestDesc(String item) {
@@ -355,7 +229,6 @@ public class Game {
         if (itemx.name().equals(item)) {
           sb.append("\n").append(itemx.getDescription());
           break;
->>>>>>> be7cd25e4b9bcb44b5abd9f6ebf6453eb6c208bd
         }
       }
     } else {
