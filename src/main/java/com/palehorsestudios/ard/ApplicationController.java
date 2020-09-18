@@ -3,18 +3,13 @@ package com.palehorsestudios.ard;
 import com.palehorsestudios.ard.characters.PlayerFactory;
 import com.palehorsestudios.ard.util.ConsoleManager;
 import com.palehorsestudios.ard.util.InvalidInputException;
-import org.apache.catalina.filters.ExpiresFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.palehorsestudios.ard.util.InputValidation.VALIDATE_CHARACTER_SELECTION;
@@ -22,6 +17,9 @@ import static com.palehorsestudios.ard.util.InputValidation.VALIDATE_CHARACTER_S
 @Controller
 public class ApplicationController {
   private Game game;
+
+  @Autowired
+  ScoreRepository scoreRepository;
 
   @GetMapping("/")
   public String getHome() {
@@ -84,7 +82,8 @@ public class ApplicationController {
   @ResponseBody
   public Response keepScore(@PathVariable String name) {
     Response.Builder responseBuilder = new Response.Builder();
-    responseBuilder.response(Game.keepScores(name, game.getPlayer()));
+    game.saveScore(name, scoreRepository);
+    responseBuilder.response(game.getScores(scoreRepository));
     return responseBuilder.build();
   }
 
