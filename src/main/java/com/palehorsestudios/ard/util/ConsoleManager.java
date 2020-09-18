@@ -1,9 +1,7 @@
 package com.palehorsestudios.ard.util;
 
-import com.palehorsestudios.ard.characters.Player;
-import com.palehorsestudios.ard.characters.PlayerFactory;
-import com.palehorsestudios.ard.environment.RoomMap;
 import com.palehorsestudios.ard.util.commands.Commands;
+import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,15 +12,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static com.palehorsestudios.ard.util.ExitGame.exit;
+import java.util.stream.Stream;
 
 public class ConsoleManager {
     private static final Scanner scanner = new Scanner(System.in);
@@ -40,7 +34,7 @@ public class ConsoleManager {
     private static String gameTitle() {
         String result;
         try {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("src/main/resources/title_art/banners.xml");
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("resources/title_art/banners.xml");
             NodeList banners = document.getElementsByTagName("banner");
             result = banners.item(ThreadLocalRandom.current().nextInt(banners.getLength())).getTextContent();
         } catch (IOException | ParserConfigurationException | SAXException e) {
@@ -50,6 +44,12 @@ public class ConsoleManager {
         return result;
     }
 
+    public static String banner() {
+        StringBuilder banner = new StringBuilder();
+        banner.append(getRandomColor().toColor(gameTitle()));
+        return banner.toString();
+    }
+
     /**
      * Method to print out welcome messages for a new game.
      * Game title (banner)
@@ -57,7 +57,6 @@ public class ConsoleManager {
      */
     public static String gameIntro() {
         StringBuilder intro = new StringBuilder();
-        intro.append(getRandomColor().toColor(gameTitle()));
         intro.append("Welcome to " + Colors.CYAN.negative("ARD") + ", the game where you get "
                 + Colors.CYAN.toColor("Another Random Destiny") + " every time you play!");
         intro.append("\nTo learn about the game, type \"help me\".");
@@ -137,41 +136,6 @@ public class ConsoleManager {
     }
 
     /**
-     * Method to choose a player class from given options.
-     *
-     * @param map Game map to get starting point for player.
-     * @return newly created player
-     */
-    public static Player choosePlayer(RoomMap map) {
-//        String[] instructions = {
-//                "Please just type in the letter 'A' or 'B' to choose the type of "
-//                        + Codes.Player.withColor("player") + " you want to play with.",
-//                "A: [" + Codes.Player.withColor("Wolverine") + "] has special ability of health boost;\n" +
-//                        "B: [" + Codes.Player.withColor("Iron Man") + "] has special ability to randomly " +
-//                        "generate one item that's already in inventory.",
-//                "Wrong input!\n" + "Enter A or B: ",
-//        };
-//
-//        System.out.println(instructions[0]);
-//        System.out.println(instructions[1]);
-//        String playerChoice = scanner.nextLine();
-//        exit(playerChoice);
-//        while (!playerChoice.toUpperCase().strip().equals(Character.toString('A')) &&
-//                !playerChoice.toUpperCase().strip().equals(Character.toString('B'))) {
-//            System.out.println(instructions[2]);
-//            System.out.println(instructions[0]);
-//            System.out.println(instructions[1]);
-//            playerChoice = scanner.nextLine();
-//            exit(playerChoice);
-//        }
-//        String playName = (playerChoice.toUpperCase().strip().equals(Character.toString('A'))) ? "Wolverine" : "Iron Man";
-//        System.out.println("Player type: [" + Codes.Player.withColor(playName) + "] has been chosen.");
-
-//        return PlayerFactory.createPlayer(map.getStart(), new ArrayList<>(), playerChoice);
-        return PlayerFactory.createPlayer(map.getStart(), new ArrayList<>(), "A");
-    }
-
-    /**
      * method made package level access only on purpose
      * <p>
      * Helper method to load in trieNodes from a given Document Node. Converting to TrieNodes for ease of traversing
@@ -217,7 +181,7 @@ public class ConsoleManager {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse("src/main/resources/menu/help_menu.xml");
+            Document doc = builder.parse(new ClassPathResource("menu/help_menu.xml").getURI().toString());
             menuNodeList = doc.getElementsByTagName("menu");
 
             MenuTrieNode menu = recursiveHelper(menuNodeList.item(0));
@@ -234,6 +198,39 @@ public class ConsoleManager {
         return failure;
     }
 
+    static Map<String, List<String>> read_xml(String fileName, String tagName) {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        Map<String, List<String>> result = new HashMap<>();
+
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse("src/main/resources/".concat(fileName));
+            doc.getDocumentElement().normalize();
+
+            NodeList list = doc.getElementsByTagName(tagName);
+
+            for (int i = 0; i < list.getLength(); i++) {
+                List<String > synonyms = new ArrayList<>();
+
+                Node node = list.item(i);
+                Element parent = (Element) node;
+
+                NodeList children = node.getChildNodes();
+                synonyms.add(parent.getAttribute(tagName));
+
+                for (int j = 0; j < children.getLength(); j++) {
+                    Node child = children.item(j);
+                    synonyms.add(child.getTextContent());
+                }
+                result.put(parent.getAttribute(tagName), synonyms);
+            }
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     /**
      * scanInput gets user input and validates input
      *
@@ -245,6 +242,8 @@ public class ConsoleManager {
         String playerInput = str.strip().toLowerCase();
         String[] words;
         words = playerInput.split("\\W+");
+        words[0] = InputValidation.VERB_SYNONYMS(words[0]);
+
             if (words.length == 2) {
                 if (commands.containsKey(words[0])) {
                     try {

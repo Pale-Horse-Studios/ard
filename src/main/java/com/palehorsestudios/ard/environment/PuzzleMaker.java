@@ -1,5 +1,8 @@
 package com.palehorsestudios.ard.environment;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -7,6 +10,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,13 +18,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PuzzleMaker {
 
     private NodeList puzzles;
+    @Value("classpath:puzzles/many_questions.xml")
+    Resource questionsFile;
 
     /**
      * Constructor. Reads in a xml file from a specific source. Ready to be used to construct puzzles
      */
     public PuzzleMaker() {
         try {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse("src/main/resources/puzzles/many_questions.xml");
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ClassPathResource("puzzles/many_questions.xml").getURI().toString());
             puzzles = document.getElementsByTagName("puzzle");
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();

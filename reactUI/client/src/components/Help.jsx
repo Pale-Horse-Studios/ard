@@ -1,9 +1,6 @@
 import React from "react";
 
-// const test = ({ content }) => {
-const HelpMenu = ({ item }) => {
-  return <p>{item}</p>;
+const Help = ({ content }) => {
+  return <div className="help">{content}</div>;
 };
-
-console.log("lincoln");
-export default HelpMenu;
+export default Help;

@@ -27,7 +27,18 @@ public class ApplicationController {
   public Response getIntro() {
     Response.Builder responseBuilder = new Response.Builder();
     responseBuilder.characterSelected(true);
+    responseBuilder.banner(ConsoleManager.banner());
     return responseBuilder.response(ConsoleManager.gameIntro()).build();
+  }
+
+  @GetMapping(path = "/stat", produces = "application/json")
+  @ResponseBody
+  public Response getStatus() {
+    Response.Builder responseBuilder = new Response.Builder();
+    responseBuilder.playerInfo(game.getPlayer().getPlayerInfo());
+    responseBuilder.roomInfo(game.getPlayer().getCurrentRoom().getRoomInfo());
+
+    return responseBuilder.build();
   }
 
   @GetMapping(path = "/command/{cmd}", produces = "application/json")
@@ -59,6 +70,14 @@ public class ApplicationController {
   public Response evaluateAnswer(@PathVariable String answer) {
     Response.Builder responseBuilder = new Response.Builder();
     responseBuilder.response(game.getPlayer().getCurrentRoom().submitAnswer(answer));
+    return responseBuilder.build();
+  }
+
+  @GetMapping(path = "/score/{name}", produces = "application/json")
+  @ResponseBody
+  public Response keepScore(@PathVariable String name) {
+    Response.Builder responseBuilder = new Response.Builder();
+    responseBuilder.response(Game.keepScores(name, game.getPlayer()));
     return responseBuilder.build();
   }
 }

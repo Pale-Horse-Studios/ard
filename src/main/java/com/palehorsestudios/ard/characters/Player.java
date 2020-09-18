@@ -2,9 +2,8 @@ package com.palehorsestudios.ard.characters;
 import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.environment.Room;
 import com.palehorsestudios.ard.util.Codes;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,12 +20,12 @@ public abstract class Player {
     }
 
     public Player(String name, int life, Room currentRoom, List<Item> itemsInventory, int level) {
-        this.name = name;
-        this.life = life;
-        this.currentRoom = currentRoom;
-        this.itemsInventory = itemsInventory;
-        this.level = level;
-        this.score = getScore();
+        setName(name);
+        setLife(life);
+        setCurrentRoom(currentRoom);
+        setItemsInventory(itemsInventory);
+        setLevel(level);
+        setScore(getScore());
     }
 
 
@@ -128,6 +127,18 @@ public abstract class Player {
         sb.append("\n").append(Codes.Score.getCode()).append(Codes.Score.withColor(" Score " + getScore()));
         sb.append("\n").append(Codes.Level.getCode()).append(Codes.Level.withColor(" Level " + getLevel()));
         return sb.toString();
+    }
+
+    public Map<String, String> getPlayerInfo() {
+        Map<String, String> playerInfo = new HashMap<>();
+
+        playerInfo.put("name", getName());
+        playerInfo.put("life", String.valueOf(getLife()));
+        playerInfo.put("lv", String.valueOf(getLevel()));
+        playerInfo.put("score", String.valueOf(getScore()));
+        playerInfo.put("inv", getItemsInventory().stream()
+                .map(item -> item.toString()).collect(Collectors.joining(", ")));
+        return playerInfo;
     }
 
     public int getLevel() {
