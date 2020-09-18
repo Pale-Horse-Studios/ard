@@ -11,15 +11,10 @@ import com.palehorsestudios.ard.environment.RoomMap;
 import com.palehorsestudios.ard.util.Codes;
 import com.palehorsestudios.ard.util.ConsoleManager;
 import com.palehorsestudios.ard.util.TextParser;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
 
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 public class Game {
@@ -33,42 +28,31 @@ public class Game {
     gameMap = new RoomMap();
   }
 
-  static String keepScores(String name, Player player) {
-    Resource scoresFileResource = new ClassPathResource("scores/final_scores.txt");
-    // write score to file
-    try (PrintWriter writer = new PrintWriter(new FileWriter(scoresFileResource.getFile(), true))) {
-      LocalDateTime time = LocalDateTime.now();
-      writer
-          .append("<Final score for this game @")
-          .append(String.valueOf(time))
-          .append(">")
-          .append("\n");
-      writer
-          .append("[")
-          .append(name)
-          .append("] (")
-          .append(player.getName())
-          .append("): ")
-          .append(String.valueOf(player.getScore()))
-          .append(" points \n");
-      writer.println();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  // TODO: separate into save score and get scores methods
+  void saveScore(String name, ScoreRepository scoreRepository) {
+    Score score = new Score();
+    score.setDate(LocalDate.now());
+    score.player_character = player.getName();
+    score.name = name;
+    score.score = player.getScore();
+    score.level = player.getLevel();
+    scoreRepository.save(score);
+  }
 
+  String getScores(ScoreRepository scoreRepository) {
+    List<Score> allScores = scoreRepository.findAll(Sort.by(Sort.Direction.DESC, "score"));
     StringBuilder sb = new StringBuilder();
-    // read scores file
-    try (BufferedReader bufferedReader =
-        new BufferedReader(
-            new InputStreamReader(
-                new ClassPathResource("scores/final_scores.txt").getInputStream()))) {
-      String line = bufferedReader.readLine();
-      while (line != null) {
-        sb.append(line).append("\n");
-        line = bufferedReader.readLine();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
+    for (Score s : allScores) {
+      sb.append(s.date)
+          .append(" ")
+          .append(s.name)
+          .append(" (")
+          .append(s.player_character)
+          .append(") : score - ")
+          .append(s.score)
+          .append(", level - ")
+          .append(s.level)
+          .append("\n");
     }
     return sb.toString();
   }
@@ -84,10 +68,6 @@ public class Game {
 
   public RoomMap getGameMap() {
     return gameMap;
-  }
-
-  public Monster getBoss() {
-    return boss;
   }
 
   /**
@@ -189,7 +169,7 @@ public class Game {
   /** Method to instigate player using their special power. */
   String UsePower(Player player, String option) {
     StringBuilder vsb = new StringBuilder();
-    vsb.append("use " + option);
+    vsb.append("use ").append(option);
     vsb.append("\n").append(player.useSpecialPower());
     return vsb.toString();
   }
