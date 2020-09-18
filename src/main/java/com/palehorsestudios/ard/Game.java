@@ -66,9 +66,9 @@ public class Game {
                 case "drop":
                     responseBuilder.response(getPlayer().dropItem(command[1]));
                     break;
-                case "help":
-                    responseBuilder.response(ConsoleManager.gameExplanation());
-                    break;
+//                case "help":
+//                    responseBuilder.response(ConsoleManager.gameExplanation());
+//                    break;
                 case "unlock":
                     if(getPlayer().getCurrentRoom().getChest() != null
                         && !getPlayer().getCurrentRoom().getChest().isBroken()) {

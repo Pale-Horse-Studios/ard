@@ -27,7 +27,8 @@ public class PlayerTest {
     @Test
     public void testPickUpItemPositive(){
         room1.addItem(Item.valueOf("Food"));  //add Food to room inventory
-        player.pickUpItem(Item.valueOf("Food")); //player pickup Food
+//        player.pickUpItem(Item.valueOfa
+//          ("Food")); //player pickup Food
 
         testList1.add(Item.valueOf("Food"));
         assertEquals(player.getItemsInventory(), testList1); //assert player inventory ("Food") and testList1 ("Food")
@@ -40,7 +41,7 @@ public class PlayerTest {
     public void testDropItem(){
         playerInventory.add(Item.valueOf("Milk")); //add Milk to player inventory
 
-        player.dropItem(Item.valueOf("Milk")); //player drop off Milk
+//        player.dropItem(Item.valueOf("Milk")); //player drop off Milk
         assertEquals(player.getItemsInventory(), testList1); //assert player inventory (empty) and testList1 (empty)
 
         testList2.add(Item.valueOf("Milk"));

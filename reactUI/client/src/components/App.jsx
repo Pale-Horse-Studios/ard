@@ -1,12 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import axios from "axios";
-import Display from "./Display.jsx";
+import Display from "./Display";
+import Help from "./Help.jsx";
+import { menu } from "./Help.json";
 
 class App extends React.Component {
   constructor(props) {
-    super(props);
-
     this.state = {
       prompt: [],
       command: "",
@@ -14,8 +13,8 @@ class App extends React.Component {
       ascii: false,
       characterSelected: false,
       question: false,
+      help: false,
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -27,35 +26,41 @@ class App extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     // Send GET Request to /command/?command
-    let route;
-    if (this.state.characterSelected) {
-      route = "character";
-    } else if (this.state.question) {
-      route = "answer";
+    const { command, characterSelected, question } = this.state;
+    if (command.trim().toLowerCase().includes("help")) {
+      this.setState({ help: true });
+    } else if (command.trim().toLowerCase().includes("close")) {
+      this.setState({ help: false });
     } else {
-      route = "command";
-    }
-    const userInput = this.state.command;
-    axios
-      .get(`/${route}/${userInput}`)
-      .then(({ data }) => {
-        console.log(data);
-        // Update player & room
-        let { response, characterSelected, question } = data;
-        let prompt = this.cleanUpResponse(response);
-        this.setState({
-          ascii: false,
-          prompt,
-          characterSelected,
-          question,
+      let route;
+      if (characterSelected) {
+        route = "character";
+      } else if (question) {
+        route = "answer";
+      } else {
+        route = "command";
+      }
+      axios
+        .get(`/${route}/${command}`)
+        .then(({ data }) => {
+          console.log(data);
+          // Update player & room
+          let { response, characterSelected, question } = data;
+          let prompt = this.cleanUpResponse(response);
+          this.setState({
+            ascii: false,
+            prompt,
+            characterSelected,
+            question,
+          });
+          if (!characterSelected || !question) {
+            this.updateStatus();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
         });
-        if (!characterSelected || !question) {
-          this.updateStatus();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    }
 
     this.initialize();
   }
@@ -95,6 +100,7 @@ class App extends React.Component {
       .then(({ data }) => {
         let { response, characterSelected, question } = data;
         let prompt = this.cleanUpResponse(response);
+        console.log(data);
         this.setState({
           ascii: true,
           prompt,
@@ -106,15 +112,19 @@ class App extends React.Component {
         console.log("Error fetching data from server: ", err);
       });
   }
-
   render() {
     const msg = this.state.prompt;
-    let { ascii, status } = this.state;
+    let { ascii, status, help } = this.state;
+    let counter = 1;
     return (
-      <div>
+      <div className="main">
         <h1 className="title">A.R.D.</h1>
 
         <div className="mainScreen">
+          <div className="helpMenu">
+            {help ? menu.map((item) => <Help content={item} />) : null};
+          </div>
+
           <div className="message">
             {msg.length > 0
               ? msg.map((line, idx) => {
@@ -130,20 +140,20 @@ class App extends React.Component {
                 })
               : null}
           </div>
-          <div className="status">
-            <h3 className="status-title">--------- S T A T U S ---------</h3>
-            {status.length > 0
-              ? status.map((line, idx) => (
-                  <Display
-                    key={idx + line}
-                    idx={idx}
-                    line={line}
-                    length={msg.length}
-                    ascii={ascii}
-                  />
-                ))
-              : null}
-          </div>
+          {status.length > 0 ? (
+            <div className="status">
+              <h3 className="status-title">--------- S T A T U S ---------</h3>
+              {status.map((line, idx) => (
+                <Display
+                  key={idx + line}
+                  idx={idx}
+                  line={line}
+                  length={msg.length}
+                  ascii={ascii}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
         <form onSubmit={this.handleSubmit} className="userInput">
           <input
