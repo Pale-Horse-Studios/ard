@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Entity
-public class Score {
+class Score {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -18,43 +18,43 @@ public class Score {
   int score;
   int level;
 
-  public LocalDate getDate() {
+  LocalDate getDate() {
     return date;
   }
 
-  public void setDate(LocalDate date) {
+  void setDate(LocalDate date) {
     this.date = date;
   }
 
-  public String getName() {
+  String getName() {
     return name;
   }
 
-  public void setName(String name) {
+  void setName(String name) {
     this.name = name;
   }
 
-  public String getCharacter() {
+  String getCharacter() {
     return player_character;
   }
 
-  public void setCharacter(String character) {
+  void setCharacter(String character) {
     this.player_character = character;
   }
 
-  public int getScore() {
+  int getScore() {
     return score;
   }
 
-  public void setScore(int score) {
+  void setScore(int score) {
     this.score = score;
   }
 
-  public int getLevel() {
+  int getLevel() {
     return level;
   }
 
-  public void setLevel(int level) {
+  void setLevel(int level) {
     this.level = level;
   }
 }
