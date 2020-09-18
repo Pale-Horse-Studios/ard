@@ -6,6 +6,7 @@ import com.palehorsestudios.ard.util.ConsoleManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -14,14 +15,20 @@ public class Chest {
     private List<Item> reward;
     private Puzzle puzzle;
     private boolean broken;
+    private int correctAnswer;
 
     public Chest(Puzzle puzzle) {
         this.puzzle = puzzle;
         reward = makeAward();
     }
 
+    public List<Item> getReward() { return reward; }
     public boolean isBroken() {
         return broken;
+    }
+
+    private int getCorrectAnswer() { return correctAnswer; }
+    private void setCorrectAnswer(int correctAnswer) { this.correctAnswer = correctAnswer;
     }
 
     /**
@@ -52,7 +59,11 @@ public class Chest {
             chestQuestion.append("\n").append(puzzle.getQuestion());
             int index = 1;
             List<String> answers = puzzle.getAllAnswers();
+
             for (String answer : answers) {
+                if (answer.equals(puzzle.getAnswer())) {
+                    setCorrectAnswer(index);
+                }
                 chestQuestion.append("\n").append(index).append(". ").append(answer);
                 index += 1;
             }
@@ -63,11 +74,16 @@ public class Chest {
         return chestQuestion.toString();
     }
 
-    List<Item> evaluateAnswer(String answer) {
-        List<Item> result = new ArrayList<>();
-        if (puzzle.getAnswer().toLowerCase().equals(answer.toLowerCase())) {
-            result = reward;
+    Map<Boolean, List<Item>> evaluateAnswer(String answer) {
+        boolean isCorrect = false;
+        HashMap<Boolean, List<Item>> result = new HashMap<>();
+        List<Item> rewards = new ArrayList<>();
+
+        if (puzzle.getAnswer().toLowerCase().equals(answer.toLowerCase()) || Integer.valueOf(answer).equals(getCorrectAnswer())) {
+            isCorrect = true;
+            rewards = getReward();
         }
+        result.put(isCorrect, rewards);
         return result;
     }
 

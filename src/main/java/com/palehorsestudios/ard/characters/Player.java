@@ -36,16 +36,22 @@ public abstract class Player {
      */
     public String pickUpItem(String item) {
         boolean validItem = false;
+        List<Item> currentItems = new ArrayList<>();
+        currentItems.addAll(currentRoom.getItems());
         for(Item i : Item.values()) {
             if (i.name().equals(item)) {
                 validItem = true;
                 break;
             }
         }
-        if (validItem && currentRoom.getItems().contains(Item.valueOf(item))) {
+        if (validItem && currentItems.contains(Item.valueOf(item))) {
             itemsInventory.add(Item.valueOf(item));
             currentRoom.grabItem(Item.valueOf(item));
             return "Picked up " + item + ".";
+        } else if (Room.ALL.contains(item.toLowerCase()) && currentItems.size() > 0) {
+            itemsInventory.addAll(currentItems);
+            currentItems.forEach(currentItem -> currentRoom.grabItem(currentItem));
+            return "Picked up all items in the current room.";
         } else {
             return "Can't pick up! This item is not in the current room!";
         }

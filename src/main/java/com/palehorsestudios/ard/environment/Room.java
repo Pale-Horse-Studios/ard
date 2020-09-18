@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Room {
+    public static final List<String> ALL = Arrays.asList("all", "everything");
+
     private String description; // description of the room
     private List<Item> items; // list of items in room
     private List<Monster> monsters; // list of monsters in room
@@ -264,14 +266,16 @@ public class Room {
 
     public String submitAnswer(String answer) {
         StringBuilder sb = new StringBuilder();
-        List<Item> reward = chest.evaluateAnswer(answer);
-        if (reward.size() > 0) {
-            this.addAllItems(reward);
-            sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and empties its contents onto the floor.");
-        } else if (reward.size() == 0) {
-            sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and ... it's empty.");
+        Map<Boolean, List<Item>> result = chest.evaluateAnswer(answer);
+        if (result.containsKey(true)) {
+            if (result.get(true).size() == 0) {
+                sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and ... it's empty.");
+            } else {
+                this.addAllItems(result.get(true));
+                sb.append("The ").append(Codes.Chest.withColor("chest")).append(" unlocks with a loud click and empties its contents onto the floor.");
+            }
         } else {
-            sb.append("The chest makes a grunt and refuses to open");
+            sb.append("That is incorrect! \nThe chest makes a grunt and refuses to open");
         }
 
         return sb.toString();
