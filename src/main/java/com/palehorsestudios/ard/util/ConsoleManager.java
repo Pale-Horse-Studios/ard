@@ -2,6 +2,7 @@ package com.palehorsestudios.ard.util;
 
 import com.palehorsestudios.ard.util.commands.Commands;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -203,8 +204,9 @@ public class ConsoleManager {
         Map<String, List<String>> result = new HashMap<>();
 
         try {
+            Resource fileResource = new ClassPathResource(fileName);
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse("src/main/resources/".concat(fileName));
+            Document doc = builder.parse(fileResource.getURI().toString());
             doc.getDocumentElement().normalize();
 
             NodeList list = doc.getElementsByTagName(tagName);
