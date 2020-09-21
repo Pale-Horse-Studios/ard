@@ -59,7 +59,6 @@ public class ApplicationController {
     // DONE: Needs character input validation
     try {
       String selection = VALIDATE_CHARACTER_SELECTION(character);
-
       game.setPlayer(PlayerFactory.createPlayer(game.getGameMap().getStart(), new ArrayList<>(), selection));
       responseBuilder.response(game.getPlayer().getName().concat(" is a great choice."));
     } catch (InvalidInputException e) {

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Game from "./Game.jsx";
 import Display from "./Display.jsx";
 import Player from "./Player.jsx";
 import Room from "./Room.jsx";
@@ -16,28 +17,84 @@ class App extends React.Component {
       banner: "",
       bannerDisplayed: false,
       player: {},
-      room: {},
+      room: null,
       playerLoaded: false,
       characterSelected: false,
       question: false,
       help: false,
       gameOver: false,
-      coord: [
-        {
-          player: { x: 0, y: 2 },
-          items: { x: 2, y: 2 },
-          monsters: { x: 4, y: 0 }, // Is boss a monster?
-          boss: null,
-        },
-      ],
+      gameScreen: { x: 6, y: 6 },
+      screen: [],
+      coord: {
+        items: null,
+        //monsters: null, // Is boss a monster?
+        boss: null,
+        chest: null,
+      },
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.navigate = this.navigate.bind(this);
   }
 
   handleChange({ target }) {
     this.setState({ command: target.value });
+  }
+
+  // Need to add obstacle check!!!!!!!!!!!!!!!!!!
+  boundaryCheck(position, limit) {
+    if (limit === 0) {
+      return position > 0 ? true : false;
+    } else {
+      return position < limit - 1 ? true : false;
+    }
+  }
+
+  navigate(event) {
+    const arrowRegex = /Arrow(Up|Down|Left|Right)/;
+    let arrowPressed = event.key.match(arrowRegex);
+
+    let { coord, gameScreen, room } = this.state;
+    let playerPosition = coord.player;
+
+    if (arrowPressed) {
+      switch (arrowPressed[1].toLowerCase()) {
+        case "up":
+          if (this.boundaryCheck(playerPosition.y, gameScreen.y)) {
+            playerPosition.y += 1;
+          } else {
+            console.log("can't proceed... Y-boundary");
+          }
+          break;
+        case "down":
+          if (this.boundaryCheck(playerPosition.y, 0)) {
+            playerPosition.y -= 1;
+          } else {
+            console.log("can't proceed... Y-boundary");
+          }
+          break;
+        case "left":
+          if (this.boundaryCheck(playerPosition.x, 0)) {
+            playerPosition.x -= 1;
+          } else {
+            console.log("can't proceed... X-boundary");
+          }
+          break;
+        case "right":
+          if (this.boundaryCheck(playerPosition.x, gameScreen.x)) {
+            playerPosition.x += 1;
+          } else {
+            console.log("can't proceed... X-boundary");
+          }
+          break;
+        default:
+          console.log("Please check the boundaries");
+      }
+    }
+
+    coord.player = playerPosition;
+    this.setState({ coord });
   }
 
   handleSubmit(event) {
@@ -112,8 +169,32 @@ class App extends React.Component {
     return res.split("\n");
   }
 
+  generateRandomCoords() {
+    let { room } = this.state;
+    let coords = [];
+    if (room !== null) {
+      for (let key in room) {
+        if (!room[key].includes("no") && !room[key].includes("present")) {
+        }
+      }
+    }
+  }
+
+  loadGameScreen({ x, y }) {
+    let screen = [];
+    for (let i = 0; i < x; i++) {
+      let xAxis = [];
+      for (let j = 0; j < y; j++) {
+        xAxis.push(j);
+      }
+      screen.push(xAxis);
+    }
+    this.setState({ screen });
+  }
+
   componentDidMount() {
     // Loading intro from server
+    let { gameScreen } = this.state;
     axios
       .get("/intro")
       .then(({ data }) => {
@@ -126,6 +207,7 @@ class App extends React.Component {
           characterSelected,
           question,
         });
+        this.loadGameScreen(gameScreen);
       })
       .catch((err) => {
         console.log("Error fetching data from server: ", err);
@@ -133,6 +215,7 @@ class App extends React.Component {
   }
 
   render() {
+    document.body.onkeydown = this.navigate;
     const msg = this.state.prompt;
     let {
       playerLoaded,
@@ -142,6 +225,7 @@ class App extends React.Component {
       player,
       room,
       coord,
+      screen,
     } = this.state;
     return (
       <div className="main">
@@ -154,18 +238,20 @@ class App extends React.Component {
               : null}
           </div>
           <div className="message">
-            {banner.length > 0 && !bannerDisplayed
-              ? banner.map((line, idx) => {
-                  return (
-                    <Display
-                      key={idx + line}
-                      idx={idx}
-                      type="ascii-line"
-                      line={line}
-                    />
-                  );
-                })
-              : null}
+            <div className="banner">
+              {banner.length > 0 && !bannerDisplayed
+                ? banner.map((line, idx) => {
+                    return (
+                      <Display
+                        key={idx + line}
+                        idx={idx}
+                        type="ascii-line"
+                        line={line}
+                      />
+                    );
+                  })
+                : null}
+            </div>
             {msg.length > 0
               ? msg.map((line, idx) => {
                   return (
@@ -178,7 +264,20 @@ class App extends React.Component {
                   );
                 })
               : null}
-            {playerLoaded ? <Game coord={coord} x={5} y={5} /> : null}
+            {playerLoaded && screen.length > 0 ? (
+              <div className="gameScreen">
+                {screen.map((elements, idx) => (
+                  <Game
+                    key={`${idx}, ${elements[0]}`}
+                    idx={idx}
+                    coord={coord}
+                    elements={elements}
+                    playerLoc={player}
+                    room={room}
+                  />
+                ))}
+              </div>
+            ) : null}
           </div>
           {playerLoaded ? (
             <div className="status">

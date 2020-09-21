@@ -17,6 +17,11 @@ h1 {
   font-size: 10rem;
 }
 
+h5 {
+  color: yellow;
+  margin: 0;
+}
+
 #app {
   display: flex;
   flex-direction: column;
@@ -27,10 +32,11 @@ h1 {
 .mainScreen {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
   background-color: #000;
-  font-size: 35px;
+  font-size: 30px;
   white-space: pre-wrap;
 }
 
@@ -51,8 +57,41 @@ h1 {
   margin: 1rem 1rem 0 1rem;
 }
 
+.banner {
+    display: flex;
+    flex-flow: column;
+}
+
 .ascii-line {
-  margin: 0;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.gameScreen {
+  background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/49326686-9a34-428c-b966-8b0727cae844/dbb0tkd-a06a2810-dfe8-44ff-b349-825ad0672aeb.jpg/v1/fill/w_900,h_451,q_75,strp/dungeon_wall___classic_by_zachvance_dbb0tkd-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3siaGVpZ2h0IjoiPD00NTEiLCJwYXRoIjoiXC9mXC80OTMyNjY4Ni05YTM0LTQyOGMtYjk2Ni04YjA3MjdjYWU4NDRcL2RiYjB0a2QtYTA2YTI4MTAtZGZlOC00NGZmLWIzNDktODI1YWQwNjcyYWViLmpwZyIsIndpZHRoIjoiPD05MDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ._QkiTZiJjsY8zDdOUlUUTNwKMf0s1cEO2ZPsAxIJY6k);
+  width: 100%;
+  height: 30rem;
+  display: flex;
+}
+
+.box {
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+}
+
+.x-axis {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column-reverse;
+}
+
+.y-axis {
+  width: 100%;
+  height: 100%;
+  border: 5px solid black;
 }
 
 .status {
