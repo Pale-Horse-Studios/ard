@@ -4,10 +4,11 @@ import Display from "./Display.jsx";
 import Player from "./Player.jsx";
 import Room from "./Room.jsx";
 import Help from "./Help.jsx";
-import { helpContent } from "./sample.json";
+import { menu } from "./help.json";
 
 class App extends React.Component {
   constructor(props) {
+    super(props);
     this.state = {
       prompt: [],
       command: "",
@@ -44,17 +45,14 @@ class App extends React.Component {
         route = "character";
       } else if (question) {
         route = "answer";
-
       } else if (gameOver) {
         route = "score";
-
       } else {
         route = "command";
       }
       axios
         .get(`/${route}/${command}`)
         .then(({ data }) => {
-
           // Update player & room
           let { response, characterSelected, question, gameOver } = data;
           let prompt = this.cleanUpResponse(response);
@@ -141,7 +139,14 @@ class App extends React.Component {
         <div className="mainScreen">
           <div className="helpScreen">
             {help
-              ? helpContent.map((content) => <Help content={content} />)
+              ? menu.children.map((content, idx) => (
+                  <Help
+                    key={content.cat}
+                    idx={idx}
+                    size={menu.children.length}
+                    content={content}
+                  />
+                ))
               : null}
           </div>
           <div className="message">
