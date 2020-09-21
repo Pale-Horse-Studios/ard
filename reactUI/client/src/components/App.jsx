@@ -5,12 +5,11 @@ import Display from "./Display.jsx";
 import Player from "./Player.jsx";
 import Room from "./Room.jsx";
 import Help from "./Help.jsx";
-import { menu } from "./sample.json";
+import { menu } from "./help.json";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       prompt: [],
       command: "",
@@ -32,7 +31,6 @@ class App extends React.Component {
         chest: null,
       },
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.navigate = this.navigate.bind(this);
@@ -100,6 +98,7 @@ class App extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     // Send GET Request to /command/?command
+
     let { command, characterSelected, question, gameOver } = this.state;
     if (command.trim().toLowerCase().includes("help")) {
       this.setState({ help: true });
@@ -200,6 +199,7 @@ class App extends React.Component {
       .then(({ data }) => {
         let { response, banner, characterSelected, question } = data;
         let prompt = this.cleanUpResponse(response);
+
         banner = this.cleanUpResponse(banner);
         this.setState({
           prompt,
@@ -213,7 +213,6 @@ class App extends React.Component {
         console.log("Error fetching data from server: ", err);
       });
   }
-
   render() {
     document.body.onkeydown = this.navigate;
     const msg = this.state.prompt;
@@ -230,11 +229,17 @@ class App extends React.Component {
     return (
       <div className="main">
         <h1 className="title">A.R.D.</h1>
-
         <div className="mainScreen">
           <div className="helpScreen">
             {help
-              ? menu.map((content, idx) => <Help id={idx} content={content} />)
+              ? menu.children.map((content, idx) => (
+                  <Help
+                    key={content.cat}
+                    idx={idx}
+                    size={menu.children.length}
+                    content={content}
+                  />
+                ))
               : null}
           </div>
           <div className="message">

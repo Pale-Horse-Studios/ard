@@ -1,14 +1,12 @@
-import React from "react";
+import React, { Children } from "react";
 
-const Help = (props) => {
-  let { helpContent }= props.content;
+const Help = ({ content, idx, size }) => {
   return (
-  <div className="help">
-    <h3>{helpContent.title}</h3>
-    <p>{helpContent.desc}</p>
-    {props.id === 0 ? <h2>Type "CLOSE" to exit</h2> : null}
-  </div>
+    <div className="help">
+      <h4 className="help-title">{content.title}</h4>
+      <p className="help-desc">{content.description}</p>
+    </div>
   );
-}
+};
 
 export default Help;
