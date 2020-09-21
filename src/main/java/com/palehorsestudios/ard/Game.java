@@ -123,6 +123,7 @@ public class Game {
     } else {
       responseBuilder.response("Invalid command. Try again.");
     }
+
     if (boss == null) {
       boss = MonsterFactory.createBossMonster(player);
       player.getCurrentRoom().addMonster(boss);

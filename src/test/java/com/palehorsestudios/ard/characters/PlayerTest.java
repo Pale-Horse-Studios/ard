@@ -29,6 +29,7 @@ public class PlayerTest {
         room1.addItem(Item.valueOf("Food"));  //add Food to room inventory
         player.pickUpItem("Food"); //player pickup Food
 
+
         testList1.add(Item.valueOf("Food"));
         assertEquals(player.getItemsInventory(), testList1); //assert player inventory ("Food") and testList1 ("Food")
 
@@ -39,10 +40,8 @@ public class PlayerTest {
     @Test
     public void testDropItem(){
         playerInventory.add(Item.valueOf("Milk")); //add Milk to player inventory
-
         player.dropItem("Milk"); //player drop off Milk
         assertEquals(player.getItemsInventory(), testList1); //assert player inventory (empty) and testList1 (empty)
-
         testList2.add(Item.valueOf("Milk"));
         assertEquals(room1.getItems(), testList2); //assert room inventory (with "Milk") and testList2 (with "Milk")
     }
