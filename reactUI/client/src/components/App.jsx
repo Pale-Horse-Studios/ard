@@ -4,7 +4,7 @@ import Display from "./Display.jsx";
 import Player from "./Player.jsx";
 import Room from "./Room.jsx";
 import Help from "./Help.jsx";
-import { helpContent } from "./sample.json";
+import { menu } from "./sample.json";
 
 class App extends React.Component {
   constructor(props) {
@@ -22,6 +22,14 @@ class App extends React.Component {
       question: false,
       help: false,
       gameOver: false,
+      coord: [
+        {
+          player: { x: 0, y: 2 },
+          items: { x: 2, y: 2 },
+          monsters: { x: 4, y: 0 }, // Is boss a monster?
+          boss: null,
+        },
+      ],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -133,6 +141,7 @@ class App extends React.Component {
       help,
       player,
       room,
+      coord,
     } = this.state;
     return (
       <div className="main">
@@ -141,7 +150,7 @@ class App extends React.Component {
         <div className="mainScreen">
           <div className="helpScreen">
             {help
-              ? helpContent.map((content) => <Help content={content} />)
+              ? menu.map((content, idx) => <Help id={idx} content={content} />)
               : null}
           </div>
           <div className="message">
@@ -169,6 +178,7 @@ class App extends React.Component {
                   );
                 })
               : null}
+            {playerLoaded ? <Game coord={coord} x={5} y={5} /> : null}
           </div>
           {playerLoaded ? (
             <div className="status">

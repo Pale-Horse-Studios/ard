@@ -1,1 +1,12 @@
-{ "helpContent": ["this is help items displaying....", "2nd help item"] }
+{"menu":
+  [
+    {"helpContent": {
+    "title": "this is help items displaying....",
+    "desc": "2nd help item"
+  }},
+    { "helpContent": {
+    "title": "this is help items displaying....",
+    "desc": "2nd help item"
+  }}
+  ]
+}
