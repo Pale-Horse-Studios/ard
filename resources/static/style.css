@@ -17,6 +17,14 @@ h1 {
   font-size: 7rem;
 }
 
+h2 {
+  font-size:35px;
+}
+
+h3 {
+  font-size: 30px;
+}
+
 h5 {
   font-size: 30px;
   margin: 0;
@@ -64,10 +72,19 @@ h6 {
 .helpScreen {
   background-color: #000;
   position: fixed;
-  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42rem;
+  width: 85%;
   /* margin: 1rem 1rem 0 1rem; */
   opacity: .9;
-  color: white;
+  color: #fff;
+}
+
+.help-inst {
+  display: flex;
+  justify-content: space-around;
 }
 
 .message {

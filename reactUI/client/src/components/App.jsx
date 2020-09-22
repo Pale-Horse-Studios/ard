@@ -16,6 +16,7 @@ class App extends React.Component {
       command: "",
       banner: "",
       bannerDisplayed: false,
+      helpIdx: 0,
       player: {},
       playerCoord: { x: null, y: null },
       // combine room & currentRoom
@@ -58,9 +59,30 @@ class App extends React.Component {
   navigate(event) {
     const arrowRegex = /Arrow(Up|Down|Left|Right)/;
     let arrowPressed = event.key.match(arrowRegex);
+    let helpNav = ["n", "p", "x"];
 
-    let { playerCoord, gameScreen } = this.state;
+    let { playerCoord, gameScreen, helpIdx, help } = this.state;
     let playerPosition = playerCoord;
+
+    let key = event.key.toLowerCase();
+    if (help && helpNav.includes(key)) {
+      if (key === "n") {
+        if (helpIdx < menu.children.length - 1) {
+          helpIdx += 1;
+        } else {
+          helpIdx = 0;
+        }
+      } else if (key === "p") {
+        if (helpIdx > 0) {
+          helpIdx -= 1;
+        } else {
+          helpIdx = menu.children.length - 1;
+        }
+      } else {
+        help = false;
+      }
+      this.setState({ helpIdx, help });
+    }
 
     if (arrowPressed) {
       switch (arrowPressed[1].toLowerCase()) {
@@ -290,6 +312,7 @@ class App extends React.Component {
       coord,
       screen,
       playerCoord,
+      helpIdx,
     } = this.state;
 
     return (
@@ -297,13 +320,16 @@ class App extends React.Component {
         <h1 className="title">A.R.D.</h1>
         <div className="display">
           <div className="info">
-            <div className="helpScreen">
-              {help
-                ? menu.children.map((content, idx) => (
+            {help ? (
+              <div className="helpScreen">
+                {menu.children.map((content, idx) =>
+                  helpIdx === idx ? (
                     <Help key={content.cat} id={idx} content={content} />
-                  ))
-                : null}
-            </div>
+                  ) : null
+                )}
+              </div>
+            ) : null}
+
             <div className="message">
               {banner.length > 0 && !bannerDisplayed
                 ? banner.map((line, idx) => {
