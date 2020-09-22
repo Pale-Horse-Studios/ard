@@ -42,7 +42,7 @@ public class ApplicationController {
     Response.Builder responseBuilder = new Response.Builder();
     responseBuilder.playerInfo(game.getPlayer().getPlayerInfo());
     responseBuilder.roomInfo(game.getPlayer().getCurrentRoom().getRoomInfo());
-
+    responseBuilder.getRoom(game.getPlayer().getCurrentRoom());
     return responseBuilder.build();
   }
 

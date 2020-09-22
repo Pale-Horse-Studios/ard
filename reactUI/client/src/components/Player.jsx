@@ -5,7 +5,7 @@ const Player = ({ player }) => {
   return (
     <div className="player">
       <div className="playerInfo">
-        <h4 className="status-title">------- {name} -------</h4>
+        <h5 className="status-title">{`> ${name} <`}</h5>
         <div className="playerInfo" id="playerInfo">
           <p className="playerInfo">HP: {player.life}</p>
           <p className="playerInfo">LV: {player.lv}</p>
@@ -13,7 +13,7 @@ const Player = ({ player }) => {
         </div>
       </div>
       <div className="playerInv">
-        <h4 className="status-title">------- INVENTORY -------</h4>
+        <h5 className="status-title">{`> INVENTORY <`}</h5>
         <p className="playerInv">{player.inv}</p>
       </div>
     </div>
