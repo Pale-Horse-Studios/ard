@@ -154,6 +154,7 @@ class App extends React.Component {
         .get(`/${route}/${command}`)
         .then(({ data }) => {
           // Update player & room
+          console.log(data);
           let { response, characterSelected, question, gameOver } = data;
           let prompt = this.cleanUpResponse(response);
           this.setState({
@@ -165,6 +166,8 @@ class App extends React.Component {
           });
           if (!characterSelected && !question && !gameOver) {
             this.updateStatus();
+          } else {
+            this.generateRandomCoords(false);
           }
         })
         .catch((err) => {
@@ -191,12 +194,8 @@ class App extends React.Component {
         if (prevRoom === null) {
           // Initial random load
           this.generateRandomCoords(true);
-        } else {
-          if (prevRoom.id !== currentRoom.id) {
-            this.generateRandomCoords(true);
-          } else {
-            this.generateRandomCoords(false);
-          }
+        } else if (prevRoom.id !== currentRoom.id) {
+          this.generateRandomCoords(true);
         }
       })
       .catch((err) => {
@@ -220,38 +219,43 @@ class App extends React.Component {
     if (needNewRoom) {
       gameScreen = { x: this.getRandomInt(), y: this.getRandomInt() };
     } else {
-      gameScreen = this.state;
+      gameScreen = this.state.gameScreen;
     }
 
-    let { playerCoord, currentRoom } = this.state;
-    let coord = {
-      items: [],
-      monsters: [],
-      chest: {},
-    };
+    let { playerCoord, currentRoom, coord } = this.state;
 
     playerCoord.x = Math.floor(gameScreen.x / 2);
     playerCoord.y = Math.floor(gameScreen.y / 2);
 
-    currentRoom.items.forEach((item) => {
-      let newItem = {};
-      newItem.name = item;
-      newItem.x = this.getRandomInt(0, gameScreen.x);
-      newItem.y = this.getRandomInt(0, gameScreen.y);
-      coord.items.push(newItem);
-    });
+    if (needNewRoom) {
+      this.loadGameScreen(gameScreen);
 
-    currentRoom.monsters.forEach((monster) => {
-      let newMonster = {};
-      newMonster.name = monster;
-      newMonster.x = this.getRandomInt(0, gameScreen.x);
-      newMonster.y = this.getRandomInt(0, gameScreen.y);
-      coord.monsters.push(newMonster);
-    });
+      coord = {
+        items: [],
+        monsters: [],
+        chest: {},
+      };
 
-    if (currentRoom.chest !== null) {
-      coord.chest.x = this.getRandomInt(0, gameScreen.x);
-      coord.chest.y = this.getRandomInt(0, gameScreen.y);
+      currentRoom.items.forEach((item) => {
+        let newItem = {};
+        newItem.name = item;
+        newItem.x = this.getRandomInt(0, gameScreen.x);
+        newItem.y = this.getRandomInt(0, gameScreen.y);
+        coord.items.push(newItem);
+      });
+
+      currentRoom.monsters.forEach((monster) => {
+        let newMonster = {};
+        newMonster.name = monster;
+        newMonster.x = this.getRandomInt(0, gameScreen.x);
+        newMonster.y = this.getRandomInt(0, gameScreen.y);
+        coord.monsters.push(newMonster);
+      });
+
+      if (currentRoom.chest !== null) {
+        coord.chest.x = this.getRandomInt(0, gameScreen.x);
+        coord.chest.y = this.getRandomInt(0, gameScreen.y);
+      }
     }
 
     this.setState({
@@ -259,8 +263,6 @@ class App extends React.Component {
       playerCoord,
       coord,
     });
-
-    this.loadGameScreen(gameScreen);
   }
 
   loadGameScreen({ x, y }) {
@@ -308,6 +310,7 @@ class App extends React.Component {
       bannerDisplayed,
       help,
       player,
+      currentRoom,
       room,
       coord,
       screen,
@@ -370,6 +373,7 @@ class App extends React.Component {
                         idx={idx}
                         coord={coord}
                         elements={elements}
+                        currentRoom={currentRoom}
                         player={player}
                         playerCoord={playerCoord}
                       />
