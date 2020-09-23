@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 public class ConsoleManager {
     private static final Scanner scanner = new Scanner(System.in);
     private static MenuTrieNode menu = read_xml();
+    private static Random random = new Random();
 
     public ConsoleManager() {
     }
@@ -80,6 +81,16 @@ public class ConsoleManager {
     private static Colors getRandomColor() {
         Colors[] colors = Colors.values();
         return colors[ThreadLocalRandom.current().nextInt(colors.length)];
+    }
+
+    public static int getRandomInteger(int max) {
+        int min = 0;
+        return getRandomInteger(min, max);
+    }
+
+    public static int getRandomInteger(int min, int max) {
+        int randomNumber = (int) Math.floor(Math.random() * (max - min) + min);
+        return randomNumber;
     }
 
     /**

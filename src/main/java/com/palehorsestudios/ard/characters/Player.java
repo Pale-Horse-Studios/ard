@@ -2,6 +2,7 @@ package com.palehorsestudios.ard.characters;
 import com.palehorsestudios.ard.environment.Item;
 import com.palehorsestudios.ard.environment.Room;
 import com.palehorsestudios.ard.util.Codes;
+import com.palehorsestudios.ard.util.ConsoleManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,6 +16,8 @@ public abstract class Player {
     private List<Item> itemsInventory;
     private int level;
     private int score = 0;
+    private int x;
+    private int y;
 
     public Player() {
     }
@@ -26,8 +29,73 @@ public abstract class Player {
         setItemsInventory(itemsInventory);
         setLevel(level);
         setScore(getScore());
+        setCoord();
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+
+    /**
+     * Set initial coord
+     */
+    private void setCoord() {
+        x = ConsoleManager.getRandomInteger(getCurrentRoom().getX()-1);
+        y = ConsoleManager.getRandomInteger(getCurrentRoom().getY()-1);
+    };
+
+    public boolean setCoord(String direction) {
+        boolean success = false;
+        int x = getX();
+        int y = getY();
+        int limitX = getCurrentRoom().getX();
+        int limitY = getCurrentRoom().getY();
+
+        switch (direction) {
+            case "up":
+                if (y < limitY - 1) {
+                    success = true;
+                    y += 1;
+                    setCoord(x, y);
+                }
+                break;
+            case "down":
+                if (y > 0) {
+                    success = true;
+                    y -= 1;
+                    setCoord(x, y);
+                }
+                break;
+            case "right":
+                if (x < limitX - 1) {
+                    success = true;
+                    x += 1;
+                    setCoord(x, y);
+                }
+                break;
+            case "left":
+                if (x > 0) {
+                    success = true;
+                    x -= 1;
+                    setCoord(x, y);
+                }
+                break;
+            default:
+                System.out.println("navigate player error");
+                break;
+        }
+        return success;
+    };
+
+    private void setCoord (int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     /**
      * If the item is in current room, add the item picked up by the user into the item inventory
@@ -113,6 +181,7 @@ public abstract class Player {
 
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
+        this.setCoord();
     }
 
     public List<Item> getItemsInventory() {
@@ -144,6 +213,8 @@ public abstract class Player {
         playerInfo.put("score", String.valueOf(getScore()));
         playerInfo.put("inv", getItemsInventory().stream()
                 .map(item -> item.toString()).collect(Collectors.joining(", ")));
+        playerInfo.put("x", String.valueOf(getX()));
+        playerInfo.put("y", String.valueOf(getY()));
         return playerInfo;
     }
 

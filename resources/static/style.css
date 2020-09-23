@@ -168,6 +168,55 @@ p.line {
   width: 100%;
 }
 
+#monster {
+  background-image: url(https://banner2.cleanpng.com/20180317/stw/kisspng-monster-cartoon-clip-art-monster-image-5aadb0202b8c80.7978285615213322561784.jpg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#monster2 {
+  background-image: url(https://www.vhv.rs/dpng/d/238-2385673_cookie-monster-clipart-biscuits-clip-art-transparent-cookie.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#iron-man {
+  background-image: url(https://f0.pngfuel.com/png/179/677/iron-man-illustration-png-clip-art.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#wolverine {
+  background-image: url(https://www.pinclipart.com/picdir/middle/182-1826398_clip-art-superhero-caricature-wolverine-cartoon-drawing-png.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#item {
+  background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTv32IzI8UuIkAdEOSeF6iSdE03nZyID4d5zg&usqp=CAU);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#chest {
+  background-image: url(https://img.lovepik.com/original_origin_pic/18/04/18/e0f525b45c91b3ba75ca7b09deb13f40.png_wh860.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#broken-chest {
+  background-image: url(https://w7.pngwing.com/pngs/187/85/png-transparent-pirate-treasure-chest-pirate-treasure-treasure-map.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .playerInfo, .playerInv, .roomInfo {
   width: 100%;
 }
@@ -182,20 +231,28 @@ p.room, p.playerInfo {
   margin: 10px 5px;
 }
 
+.status-item {
+  display: flex;
+}
+
 form {
   border-top: 5px solid #9b0000;
   width: 100%;
   height: 5rem;
   display: flex;
   justify-content: space-between;
+  font-family: 'Ubuntu Mono', monospace;
 }
 
 input {
   width: 80%;
   font-size: 25px;
+  font-family: 'Ubuntu Mono', monospace;
+  text-transform: uppercase;
 }
 
 button {
+  font-family: 'Ubuntu Mono', monospace;
   width: 20%;
   font-size: 30px;
   text-transform: uppercase;
@@ -205,4 +262,16 @@ button {
 
 button:hover {
   cursor: pointer;
+}
+
+.game-over {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#over {
+  font-size: 35px;
+  color: #fff;
 }

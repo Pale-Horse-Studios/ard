@@ -18,7 +18,6 @@ class App extends React.Component {
       bannerDisplayed: false,
       helpIdx: 0,
       player: {},
-      playerCoord: { x: null, y: null },
       // combine room & currentRoom
       room: null,
       currentRoom: null,
@@ -27,20 +26,14 @@ class App extends React.Component {
       question: false,
       help: false,
       gameOver: false,
+      nameSubmitted: false,
       gameScreen: null,
       screen: [],
-      coord: {
-        items: [],
-        monsters: [],
-        // Is boss a monster?
-        //boss: null,
-        chest: {},
-      },
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.navigate = this.navigate.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   handleChange({ target }) {
@@ -56,15 +49,21 @@ class App extends React.Component {
     }
   }
 
-  navigate(event) {
+  handleKeyPress(event) {
     const arrowRegex = /Arrow(Up|Down|Left|Right)/;
     let arrowPressed = event.key.match(arrowRegex);
     let helpNav = ["n", "p", "x"];
+    let gameOverChoice = ["y", "n"];
 
-    let { playerCoord, gameScreen, helpIdx, help } = this.state;
-    let playerPosition = playerCoord;
+    let { helpIdx, help, gameOver, nameSubmitted } = this.state;
+
+    if (arrowPressed) {
+      let direction = arrowPressed[1].toLowerCase();
+      this.checkObstacle(direction);
+    }
 
     let key = event.key.toLowerCase();
+
     if (help && helpNav.includes(key)) {
       if (key === "n") {
         if (helpIdx < menu.children.length - 1) {
@@ -82,53 +81,116 @@ class App extends React.Component {
         help = false;
       }
       this.setState({ helpIdx, help });
+    } else if (nameSubmitted && gameOverChoice.includes(key)) {
+      let path;
+      if (key === "n") {
+        window.location.href = "http://www.amazon.com";
+      } else {
+        window.location.href = "http://127.0.0.1:5000/";
+        // axios
+        //   .get("/playAgain")
+        //   .then(({ data }) => {
+        //     console.log("restarting the game...");
+        //   })
+        //   .catch((err) => console.log(err));
+      }
+    }
+  }
+
+  checkObstacle(direction) {
+    let { player, room } = this.state;
+    let x = parseInt(player.x);
+    let y = parseInt(player.y);
+    if (direction === "up") {
+      y += 1;
+    } else if (direction === "down") {
+      y -= 1;
+    } else if (direction === "left") {
+      x -= 1;
+    } else if (direction === "right") {
+      x += 1;
     }
 
-    if (arrowPressed) {
-      switch (arrowPressed[1].toLowerCase()) {
-        case "up":
-          if (this.boundaryCheck(playerPosition.y, gameScreen.y)) {
-            playerPosition.y += 1;
-          } else {
-            this.setState({ prompt: ["Banging my head against a wall..."] });
-          }
-          break;
-        case "down":
-          if (this.boundaryCheck(playerPosition.y, 0)) {
-            playerPosition.y -= 1;
-          } else {
-            this.setState({
-              prompt: ["Banging my head against a wall...Are you serious?"],
-            });
-          }
-          break;
-        case "left":
-          if (this.boundaryCheck(playerPosition.x, 0)) {
-            playerPosition.x -= 1;
-          } else {
-            this.setState({
-              prompt: [
-                "Banging my head against a wall... Can't fix stupidity.",
-              ],
-            });
-          }
-          break;
-        case "right":
-          if (this.boundaryCheck(playerPosition.x, gameScreen.x)) {
-            playerPosition.x += 1;
-          } else {
-            this.setState({
-              prompt: ["Dumber than a rock... Literally..."],
-            });
-          }
-          break;
-        default:
-          console.log("Please check the boundaries");
+    let obstacle = false;
+    let isItem = false;
+    let command;
+
+    for (let i = 1; i < room.length; i++) {
+      if (parseInt(room[i]["x"]) === x && parseInt(room[i]["y"]) === y) {
+        obstacle = true;
+        if (room[i].type === "item") {
+          command = `pickup ${room[i].name}`;
+          isItem = true;
+        } else if (room[i].type === "monster") {
+          command = `fight ${room[i].type}`;
+        } else if (room[i].type === "chest") {
+          command = `unlock ${room[i].name}`;
+        }
       }
     }
 
-    playerCoord = playerPosition;
-    this.setState({ playerCoord });
+    if (obstacle && !isItem) {
+      axios
+        .get(`/command/${command}`)
+        .then(({ data }) => {
+          // Update player & room
+          let { response, characterSelected, question, gameOver } = data;
+          let prompt = this.cleanUpResponse(response);
+          this.setState({
+            prompt,
+            characterSelected,
+            question,
+            bannerDisplayed: true,
+            gameOver,
+          });
+          if (!characterSelected && !question && !gameOver) {
+            this.updateStatus();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (obstacle && isItem) {
+      axios
+        .get(`/command/${command}`)
+        .then(({ data }) => {
+          // Update player & room
+          let { response, characterSelected, question, gameOver } = data;
+          let prompt = this.cleanUpResponse(response);
+          this.setState({
+            prompt,
+            characterSelected,
+            question,
+            bannerDisplayed: true,
+            gameOver,
+          });
+          if (!characterSelected && !question && !gameOver) {
+            this.updateStatus();
+          }
+          axios
+            .get(`/nav/${direction}`)
+            .then(({ data }) => {
+              let { playerInfo, response } = data;
+              this.setState({ player: playerInfo, prompt: [response] });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios
+        .get(`/nav/${direction}`)
+        .then(({ data }) => {
+          let { playerInfo, response } = data;
+          this.setState({ player: playerInfo, prompt: [response] });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   handleSubmit(event) {
@@ -147,6 +209,7 @@ class App extends React.Component {
         route = "answer";
       } else if (gameOver) {
         route = "score";
+        this.setState({ nameSubmitted: true });
       } else {
         route = "command";
       }
@@ -154,7 +217,6 @@ class App extends React.Component {
         .get(`/${route}/${command}`)
         .then(({ data }) => {
           // Update player & room
-          console.log(data);
           let { response, characterSelected, question, gameOver } = data;
           let prompt = this.cleanUpResponse(response);
           this.setState({
@@ -166,8 +228,6 @@ class App extends React.Component {
           });
           if (!characterSelected && !question && !gameOver) {
             this.updateStatus();
-          } else {
-            this.generateRandomCoords(false);
           }
         })
         .catch((err) => {
@@ -179,24 +239,18 @@ class App extends React.Component {
   }
 
   updateStatus() {
-    let prevRoom = this.state.currentRoom;
     axios
       .get(`/stat`)
       .then(({ data }) => {
         // Update player & room
         const { playerInfo, roomInfo, currentRoom } = data;
+        this.loadGameScreen({ x: roomInfo[0].x, y: roomInfo[0].y });
         this.setState({
           player: playerInfo,
           room: roomInfo,
           playerLoaded: true,
           currentRoom,
         });
-        if (prevRoom === null) {
-          // Initial random load
-          this.generateRandomCoords(true);
-        } else if (prevRoom.id !== currentRoom.id) {
-          this.generateRandomCoords(true);
-        }
       })
       .catch((err) => {
         console.log(err);
@@ -214,57 +268,6 @@ class App extends React.Component {
     return res.split("\n");
   }
 
-  generateRandomCoords(needNewRoom) {
-    let gameScreen;
-    if (needNewRoom) {
-      gameScreen = { x: this.getRandomInt(), y: this.getRandomInt() };
-    } else {
-      gameScreen = this.state.gameScreen;
-    }
-
-    let { playerCoord, currentRoom, coord } = this.state;
-
-    playerCoord.x = Math.floor(gameScreen.x / 2);
-    playerCoord.y = Math.floor(gameScreen.y / 2);
-
-    if (needNewRoom) {
-      this.loadGameScreen(gameScreen);
-
-      coord = {
-        items: [],
-        monsters: [],
-        chest: {},
-      };
-
-      currentRoom.items.forEach((item) => {
-        let newItem = {};
-        newItem.name = item;
-        newItem.x = this.getRandomInt(0, gameScreen.x);
-        newItem.y = this.getRandomInt(0, gameScreen.y);
-        coord.items.push(newItem);
-      });
-
-      currentRoom.monsters.forEach((monster) => {
-        let newMonster = {};
-        newMonster.name = monster;
-        newMonster.x = this.getRandomInt(0, gameScreen.x);
-        newMonster.y = this.getRandomInt(0, gameScreen.y);
-        coord.monsters.push(newMonster);
-      });
-
-      if (currentRoom.chest !== null) {
-        coord.chest.x = this.getRandomInt(0, gameScreen.x);
-        coord.chest.y = this.getRandomInt(0, gameScreen.y);
-      }
-    }
-
-    this.setState({
-      gameScreen,
-      playerCoord,
-      coord,
-    });
-  }
-
   loadGameScreen({ x, y }) {
     let screen = [];
     for (let i = 0; i < x; i++) {
@@ -275,10 +278,6 @@ class App extends React.Component {
       screen.push(xAxis);
     }
     this.setState({ screen });
-  }
-
-  getRandomInt(min = 5, max = 10) {
-    return Math.floor(Math.random() * (max - min) + min);
   }
 
   componentDidMount() {
@@ -302,7 +301,7 @@ class App extends React.Component {
   }
 
   render() {
-    document.body.onkeydown = this.navigate;
+    document.body.onkeydown = this.handleKeyPress;
     const msg = this.state.prompt;
     let {
       playerLoaded,
@@ -312,10 +311,10 @@ class App extends React.Component {
       player,
       currentRoom,
       room,
-      coord,
       screen,
-      playerCoord,
       helpIdx,
+      gameOver,
+      nameSubmitted,
     } = this.state;
 
     return (
@@ -362,7 +361,7 @@ class App extends React.Component {
                 : null}
             </div>
           </div>
-          {playerLoaded ? (
+          {playerLoaded && room !== null && !gameOver ? (
             <div className="mainScreen">
               <div className="main-left">
                 {screen.length > 0 ? (
@@ -371,11 +370,10 @@ class App extends React.Component {
                       <Game
                         key={`${idx}, ${elements[0]}`}
                         idx={idx}
-                        coord={coord}
                         elements={elements}
                         currentRoom={currentRoom}
                         player={player}
-                        playerCoord={playerCoord}
+                        room={room}
                       />
                     ))}
                   </div>
@@ -384,9 +382,19 @@ class App extends React.Component {
               <div className="main-right">
                 <div className="status">
                   <Player player={player} />
-                  <Room room={room} />
+                  <Room room={currentRoom} />
                 </div>
               </div>
+            </div>
+          ) : playerLoaded && gameOver ? (
+            <div className="mainScreen game-over" id="game-over">
+              <h1>GAME OVER</h1>
+              {nameSubmitted ? (
+                <div className="game-over">
+                  <p id="over">Would you like to play again?</p>
+                  <p id="over">Press [Y] for YES or [N] for NO</p>
+                </div>
+              ) : null}
             </div>
           ) : null}
           <form onSubmit={this.handleSubmit} className="userInput">

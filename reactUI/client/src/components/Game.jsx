@@ -1,36 +1,50 @@
 import React from "react";
 
-const Game = ({ coord, elements, idx, player, playerCoord, currentRoom }) => {
+const Game = ({ elements, idx, player, room }) => {
+  let character;
+  if (player.name.toLowerCase().includes("iron")) {
+    character = "iron-man";
+  } else {
+    character = "wolverine";
+  }
   return (
     <div className="x-axis boxContainer">
       {elements.map((el) => {
-        if (playerCoord.x === idx && playerCoord.y === el) {
-          return (
-            <div key={`${idx},${el}`} className="box playerChar" id="player">
-              <h6>Lv.{player.lv}</h6>
-              <h6>{player.name}</h6>
-            </div>
-          );
-        }
-        if (
-          currentRoom.chest !== null &&
-          coord.chest.x === idx &&
-          coord.chest.y === el
-        ) {
-          let name = currentRoom.chest.broken ? "Broken Chest" : "Chest";
-          return (
-            <div key={`${idx},${el}`} className="box chest" id="chest">
-              <h6>{name}</h6>
-            </div>
-          );
-        } else {
+        let changed = false;
+        if (parseInt(player.x) === idx && parseInt(player.y) === el) {
+          changed = true;
           return (
             <div
               key={`${idx},${el}`}
-              className="box empty"
-              id={`${idx},${el}`}
+              className="box playerChar"
+              id={character}
             ></div>
           );
+        }
+        // Starting from index 1. Index 0 is general room information.
+        for (let i = 1; i < room.length; i++) {
+          if (parseInt(room[i]["x"]) === idx && parseInt(room[i]["y"]) === el) {
+            changed = true;
+            let type;
+            if (
+              room[i].type === "chest" &&
+              room[i].name.toLowerCase().includes("broke")
+            ) {
+              type = "broken-chest";
+            } else {
+              type = room[i].type;
+            }
+            return (
+              <div
+                key={`${idx},${el}`}
+                className={`box ${type}`}
+                id={type}
+              ></div>
+            );
+          }
+        }
+        if (!changed) {
+          return <div key={`${idx},${el}`} className="box empty"></div>;
         }
       })}
     </div>
