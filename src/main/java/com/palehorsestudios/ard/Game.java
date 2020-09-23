@@ -148,6 +148,7 @@ public class Game {
               + " for this game: ";
       responseBuilder.gameOver(true);
     }
+
     return responseBuilder.build();
   }
 
@@ -162,7 +163,6 @@ public class Game {
   /** Method to instigate player fighting. Calls player's attack method */
   String Fight(Player player, String option) {
     StringBuilder sb = new StringBuilder();
-    sb.append("fighting ").append(option).append("\n");
     sb.append(player.attack());
     return sb.toString();
   }

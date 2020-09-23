@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class ApplicationController {
     Response.Builder responseBuilder = new Response.Builder();
     responseBuilder.playerInfo(game.getPlayer().getPlayerInfo());
     responseBuilder.roomInfo(game.getPlayer().getCurrentRoom().getRoomInfo());
-
+    responseBuilder.getRoom(game.getPlayer().getCurrentRoom());
     return responseBuilder.build();
   }
 
@@ -58,7 +59,6 @@ public class ApplicationController {
     // DONE: Needs character input validation
     try {
       String selection = VALIDATE_CHARACTER_SELECTION(character);
-
       game.setPlayer(PlayerFactory.createPlayer(game.getGameMap().getStart(), new ArrayList<>(), selection));
       responseBuilder.response(game.getPlayer().getName().concat(" is a great choice."));
     } catch (InvalidInputException e) {
@@ -84,5 +84,15 @@ public class ApplicationController {
     game.saveScore(name, scoreRepository);
     responseBuilder.response(game.getScores(scoreRepository));
     return responseBuilder.build();
+  }
+
+  @GetMapping(path = "/playAgain")
+  public RedirectView playAgain() {
+    return new RedirectView("/");
+  }
+
+  @GetMapping(path = "/quit")
+  public RedirectView redirectToAmazon() {
+    return new RedirectView("https://www.amazon.com");
   }
 }
