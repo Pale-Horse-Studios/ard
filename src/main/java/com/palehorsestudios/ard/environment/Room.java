@@ -3,6 +3,7 @@ package com.palehorsestudios.ard.environment;
 import com.palehorsestudios.ard.characters.Monster;
 import com.palehorsestudios.ard.characters.MonsterFactory;
 import com.palehorsestudios.ard.util.Codes;
+import com.palehorsestudios.ard.util.ConsoleManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +17,8 @@ public class Room {
     private final int id; // room id (for ensuring hashcode is different)
     private Random random = new Random(); // Generate random numbers
     private Chest chest; // a chest of reward items
+    private final int x = ConsoleManager.getRandomInteger(5,10);
+    private final int y = ConsoleManager.getRandomInteger(5,10);
 
 
     /**
@@ -31,6 +34,14 @@ public class Room {
         monsters = new ArrayList<>();
         generateRandomRoomItems();
         generateRandomNormalMonsters();
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
     }
 
     /**
@@ -80,6 +91,7 @@ public class Room {
      */
     public void addItem(Item item) {
         if (item != null) {
+            item.setCoord(this);
             items.add(item);
         }
     }
@@ -110,6 +122,7 @@ public class Room {
      */
     public void addMonster(Monster monster) {
         if (monster != null) {
+            monster.setCoord(this);
             monsters.add(monster);
         }
     }
@@ -183,16 +196,26 @@ public class Room {
         return sb.toString();
     }
 
-    public Map<String, String> getRoomInfo() {
+    public List<Map<String, String>> getRoomInfo() {
+        List<Map<String, String>> roomInfoList = new ArrayList<>();
         Map<String, String> roomInfo = new HashMap<>();
-
         roomInfo.put("id", String.valueOf(getId()));
         roomInfo.put("desc", getDescription());
         roomInfo.put("items", itemsPresent());
         roomInfo.put("monsters", monstersPresent());
         roomInfo.put("chest", chestPresent());
+        roomInfo.put("x", String.valueOf(getX()));
+        roomInfo.put("y", String.valueOf(getY()));
 
-        return roomInfo;
+        roomInfoList.add(roomInfo);
+
+        getAllItems().forEach(item -> roomInfoList.add(item.getItemInfo()));
+        getAllMonster().forEach(monster -> roomInfoList.add(monster.getMonsterInfo()));
+        if (getChest() != null) {
+            roomInfoList.add(getChest().getChestInfo());
+        }
+
+        return roomInfoList;
     }
 
     /**
@@ -279,6 +302,14 @@ public class Room {
         }
 
         return sb.toString();
+    }
+
+    public List<Monster> getAllMonster() {
+        return monsters;
+    }
+
+    public List<Item> getAllItems() {
+        return items;
     }
 
     @Override

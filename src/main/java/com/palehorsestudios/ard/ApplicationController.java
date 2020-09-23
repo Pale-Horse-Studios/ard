@@ -5,9 +5,7 @@ import com.palehorsestudios.ard.util.ConsoleManager;
 import com.palehorsestudios.ard.util.InvalidInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
@@ -41,7 +39,11 @@ public class ApplicationController {
   public Response getStatus() {
     Response.Builder responseBuilder = new Response.Builder();
     responseBuilder.playerInfo(game.getPlayer().getPlayerInfo());
-    responseBuilder.roomInfo(game.getPlayer().getCurrentRoom().getRoomInfo());
+    try {
+      responseBuilder.roomInfo(game.getPlayer().getCurrentRoom().getRoomInfo());
+    } catch(NullPointerException e) {
+      e.printStackTrace();
+    }
     responseBuilder.getRoom(game.getPlayer().getCurrentRoom());
     return responseBuilder.build();
   }
@@ -83,12 +85,30 @@ public class ApplicationController {
     Response.Builder responseBuilder = new Response.Builder();
     game.saveScore(name, scoreRepository);
     responseBuilder.response(game.getScores(scoreRepository));
+    responseBuilder.gameOver(true);
+    return responseBuilder.build();
+  }
+
+  @GetMapping(path = "/nav/{direction}", produces = "application/json")
+  @ResponseBody
+  public Response navigate(@PathVariable String direction) {
+    Response.Builder responseBuilder = new Response.Builder();
+    if (!game.getPlayer().setCoord(direction)) {
+      responseBuilder.response("Banging my head against a wall...");
+
+    } else {
+      responseBuilder.response("Moving " + direction);
+    }
+    responseBuilder.playerInfo(game.getPlayer().getPlayerInfo());
+    responseBuilder.roomInfo(game.getPlayer().getCurrentRoom().getRoomInfo());
+    responseBuilder.getRoom(game.getPlayer().getCurrentRoom());
     return responseBuilder.build();
   }
 
   @GetMapping(path = "/playAgain")
-  public RedirectView playAgain() {
-    return new RedirectView("/");
+  public String playAgain() {
+    game = new Game();
+    return "index";
   }
 
   @GetMapping(path = "/quit")

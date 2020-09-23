@@ -2,6 +2,8 @@ package com.palehorsestudios.ard;
 
 import com.palehorsestudios.ard.environment.Room;
 import lombok.Data;
+
+import java.util.List;
 import java.util.Map;
 
 @Data class Response {
@@ -12,7 +14,7 @@ import java.util.Map;
   boolean characterSelected;
   String gameOverResult;
   Map<String, String> playerInfo;
-  Map<String, String> roomInfo;
+  List<Map<String, String>> roomInfo;
   Room currentRoom;
 
   Response(Builder builder) {
@@ -35,7 +37,7 @@ import java.util.Map;
     boolean isQuestion;
     boolean characterSelected;
     Map<String, String> playerInfo;
-    Map<String, String> roomInfo;
+    List<Map<String, String>> roomInfo;
     Room currentRoom;
 
     Builder() { }
@@ -75,7 +77,7 @@ import java.util.Map;
       return this;
     }
 
-    Builder roomInfo(Map<String, String> roomInfo) {
+    Builder roomInfo(List<Map<String, String>> roomInfo) {
       this.roomInfo = roomInfo;
       return this;
     }

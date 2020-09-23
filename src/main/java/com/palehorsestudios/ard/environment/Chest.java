@@ -16,6 +16,8 @@ public class Chest {
     private Puzzle puzzle;
     private boolean broken;
     private int correctAnswer;
+    private int x;
+    private int y;
 
     public Chest(Puzzle puzzle) {
         this.puzzle = puzzle;
@@ -30,6 +32,32 @@ public class Chest {
     private int getCorrectAnswer() { return correctAnswer; }
     private void setCorrectAnswer(int correctAnswer) { this.correctAnswer = correctAnswer;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setCoord(Room room) {
+        int x;
+        int y;
+        if (room.getX() - 1 < 0) {
+            x = 0;
+        } else {
+            x = room.getX()-1;
+        }
+
+        if (room.getY() - 1 < 0) {
+            y = 0;
+        } else {
+            y = room.getY()-1;
+        }
+        this.x = ConsoleManager.getRandomInteger(x);
+        this.y = ConsoleManager.getRandomInteger(y);
+    };
 
     /**
      * Helper method to get a bunch of random items (not power stones) and put it into reward list.
@@ -108,6 +136,22 @@ public class Chest {
         }
 
         return choice;
+    }
+
+    public Map<String, String> getChestInfo() {
+        Map<String, String> chestInfo = new HashMap<>();
+        StringBuilder name = new StringBuilder();
+        if (this.isBroken()) {
+            name.append("BROKEN CHEST");
+        } else {
+            name.append("CHEST");
+        }
+        chestInfo.put("name", name.toString());
+        chestInfo.put("type", "chest");
+        chestInfo.put("x", String.valueOf(this.getX()));
+        chestInfo.put("y", String.valueOf(this.getY()));
+
+        return chestInfo;
     }
 
     @Override
